@@ -1,0 +1,402 @@
+<title>Is the Annex A Baseline Real?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --paper:#F5F6F8; --surface:#FFFFFF; --ink:#171B21; --ink2:#454D57; --muted:#727A85; --rule:#DCE0E6; --rule2:#EDF0F3;
+  --claim:#B45309; --claim-tint:#FBEFE3; --t1:#00544C; --t2:#008C7E; --t3:#58BEB1; --teal-tint:#E3F3F1;
+  --bad:#B3261E; --bad-tint:#FBE9E7; --grid:#E6E9EE; --tip-bg:#171B21; --tip-ink:#F5F6F8;
+  --serif:"Spectral", Georgia, "Times New Roman", serif; --sans:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif; --mono:"IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper:#14171B; --surface:#1C2026; --ink:#ECEEF1; --ink2:#B4BAC3; --muted:#838B96; --rule:#2C323A; --rule2:#242930;
+  --claim:#E8873A; --claim-tint:#2E2118; --t1:#2A9186; --t2:#3FBFB2; --t3:#8ADCD1; --teal-tint:#16312E;
+  --bad:#F2705F; --bad-tint:#3A1F1B; --grid:#262B32; --tip-bg:#ECEEF1; --tip-ink:#14171B;
+} }
+:root[data-theme="dark"] {
+  --paper:#14171B; --surface:#1C2026; --ink:#ECEEF1; --ink2:#B4BAC3; --muted:#838B96; --rule:#2C323A; --rule2:#242930;
+  --claim:#E8873A; --claim-tint:#2E2118; --t1:#2A9186; --t2:#3FBFB2; --t3:#8ADCD1; --teal-tint:#16312E;
+  --bad:#F2705F; --bad-tint:#3A1F1B; --grid:#262B32; --tip-bg:#ECEEF1; --tip-ink:#14171B;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+.page { max-width:1040px; margin:0 auto; padding:40px 28px 80px; }
+.prose { max-width:68ch; }
+h1,h2,h3 { font-family:var(--serif); font-weight:600; letter-spacing:-0.005em; text-wrap:balance; margin:0; }
+h1 { font-size:clamp(32px,4.4vw,46px); line-height:1.08; }
+h2 { font-size:26px; line-height:1.2; margin-top:64px; }
+h3 { font-size:19px; line-height:1.3; margin-top:28px; }
+p { margin:12px 0 0; color:var(--ink2); }
+p strong, li strong { color:var(--ink); font-weight:600; }
+.eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); display:flex; gap:14px; flex-wrap:wrap; }
+.eyebrow .tag { color:var(--claim); }
+.stand { font-size:19px; line-height:1.45; color:var(--ink2); margin-top:16px; }
+.rule { border:0; border-top:1px solid var(--rule); margin:28px 0 0; }
+.verdict { display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:28px; border-top:2px solid var(--ink); }
+.verdict > div { padding:20px 20px 22px 0; border-right:1px solid var(--rule); }
+.verdict > div:last-child { border-right:0; }
+.verdict > div + div { padding-left:20px; }
+.verdict .k { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.verdict .n { font-family:var(--serif); font-size:40px; line-height:1; margin-top:10px; font-variant-numeric:tabular-nums; }
+.verdict .n.claim { color:var(--claim); }
+.verdict .n.bad { color:var(--bad); }
+.verdict p { font-size:14.5px; margin-top:10px; }
+.callout { margin-top:28px; padding:18px 22px; border-left:3px solid var(--bad); background:var(--bad-tint); max-width:76ch; }
+.callout p { margin:0; color:var(--ink); }
+.callout p + p { margin-top:8px; }
+.docs { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:22px; }
+.doc { background:var(--surface); border:1px solid var(--rule); padding:18px 20px 20px; }
+.doc h3 { margin-top:0; font-size:17px; }
+.doc .src { font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.04em; margin-top:2px; }
+.doc table { margin-top:14px; }
+.doc p { font-size:14.5px; }
+table { border-collapse:collapse; width:100%; font-variant-numeric:tabular-nums; font-size:14.5px; }
+th,td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--rule2); white-space:nowrap; }
+th { font-weight:500; color:var(--muted); font-family:var(--mono); font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+th[scope="row"], td:first-child { text-align:left; }
+tbody th[scope="row"] { color:var(--ink); font-family:var(--sans); font-size:14.5px; text-transform:none; letter-spacing:0; }
+tr.total td, tr.total th { border-top:1px solid var(--ink); border-bottom:0; font-weight:600; color:var(--ink); }
+td.claim { color:var(--claim); font-weight:600; }
+td.bad { color:var(--bad); font-weight:600; }
+td.good { color:var(--t2); }
+.tablewrap { overflow-x:auto; margin-top:18px; }
+.wide { margin-top:22px; }
+figure { margin:22px 0 0; background:var(--surface); border:1px solid var(--rule); padding:18px 18px 12px; }
+figcaption { font-size:14px; color:var(--ink2); padding:8px 4px 6px; }
+figcaption b { color:var(--ink); font-weight:600; }
+.chart { width:100%; height:auto; display:block; overflow:visible; }
+.chart text { font-family:var(--mono); font-size:11.5px; fill:var(--muted); }
+.chart .dlabel { fill:var(--ink2); font-family:var(--sans); font-size:12.5px; }
+.chart .dvalue { font-weight:500; font-size:12.5px; }
+.chart .grid { stroke:var(--grid); stroke-width:1; }
+.chart .marker { stroke:var(--rule); stroke-width:1; stroke-dasharray:3 3; }
+.chart .leader { stroke:var(--rule); stroke-width:1; }
+.chart .line { fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+.chart .dot { stroke:var(--surface); stroke-width:2; }
+.chart .hit { fill:transparent; cursor:crosshair; }
+.s-claim { stroke:var(--claim); fill:var(--claim); color:var(--claim); }
+.s-t1 { stroke:var(--t1); fill:var(--t1); color:var(--t1); }
+.s-t2 { stroke:var(--t2); fill:var(--t2); color:var(--t2); }
+.s-t3 { stroke:var(--t3); fill:var(--t3); color:var(--t3); }
+text.dvalue.s-claim { stroke:none; } text.dvalue.s-t1, text.dvalue.s-t2, text.dvalue.s-t3 { stroke:none; }
+.legend { display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--ink2); padding:0 4px 8px; }
+.legend span::before { content:""; display:inline-block; width:14px; height:3px; border-radius:2px; margin-right:7px; vertical-align:middle; background:currentColor; }
+.legend .dash::before { background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px); }
+#tip { position:fixed; pointer-events:none; background:var(--tip-bg); color:var(--tip-ink); padding:8px 11px; font-size:12.5px; line-height:1.5; border-radius:3px; font-family:var(--mono); z-index:10; max-width:300px; }
+#tip b { font-family:var(--sans); }
+#tip span { display:inline-block; width:9px; height:9px; border-radius:2px; background:currentColor; margin-right:6px; vertical-align:-1px; }
+#tip[hidden] { display:none; }
+ol.chain { counter-reset:step; list-style:none; padding:0; margin:18px 0 0; max-width:76ch; }
+ol.chain li { position:relative; padding:0 0 18px 52px; }
+ol.chain li::before { counter-increment:step; content:counter(step); position:absolute; left:0; top:0; width:34px; height:34px; border:1px solid var(--ink); border-radius:50%; display:grid; place-items:center; font-family:var(--serif); font-size:17px; color:var(--ink); }
+ol.chain li h3 { margin-top:4px; font-size:17px; }
+ol.chain li p { font-size:15px; }
+ul.asks { padding-left:0; list-style:none; margin:16px 0 0; max-width:76ch; }
+ul.asks li { padding:14px 0; border-top:1px solid var(--rule); color:var(--ink2); font-size:15px; }
+ul.asks li:last-child { border-bottom:1px solid var(--rule); }
+ul.asks li b { color:var(--ink); display:block; margin-bottom:3px; font-weight:600; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:16px; }
+.two h3 { margin-top:8px; }
+.two ul { padding-left:18px; margin:10px 0 0; color:var(--ink2); font-size:14.5px; }
+.two li { margin-top:7px; }
+.mono { font-family:var(--mono); font-size:.92em; }
+.sources { font-size:13.5px; color:var(--muted); margin-top:40px; border-top:1px solid var(--rule); padding-top:16px; }
+.sources p { color:var(--muted); font-size:13.5px; }
+.sources code { font-family:var(--mono); font-size:12.5px; color:var(--ink2); }
+@media (max-width:760px) {
+  .verdict { grid-template-columns:1fr; } .verdict > div { border-right:0; border-bottom:1px solid var(--rule); padding-left:0 !important; }
+  .docs, .two { grid-template-columns:1fr; } h2 { margin-top:48px; }
+}
+@media (prefers-reduced-motion: no-preference) { .chart .dot { transition:r .12s; } }
+</style>
+
+<div class="page">
+<div class="eyebrow"><span>Botify · Walmart SpeedWorkers pilot</span><span class="tag">Internal — not for Walmart</span><span>8 September 2026</span></div>
+<h1 style="margin-top:14px">Is the Annex&nbsp;A baseline real?</h1>
+<p class="stand prose">Walmart's Annex A baseline and the §16.4 goals they want us to sign, checked against the search data Botify holds on walmart.com — 664 days of Google Search Console, 514 of Bing, Walmart's own scorecards — and against Frank's projection model.</p>
+
+<div class="verdict">
+  <div><div class="k">Baseline · Sep–Dec 2026</div><div class="n claim">+17%</div><p><b>693.2M</b> in Annex A against <b>591.3M</b> from Walmart's own run-rate and the measured trend — roughly <b>100M visits</b> of headroom. Even with the decline set to zero it is still 6% high.</p></div>
+  <div><div class="k">Seasonal shape · Dec vs Nov</div><div class="n claim">+19%</div><p>Annex A climbs 19% from November to December. Walmart's own search traffic climbed <b>6.4%</b> last December and <b>7.4%</b> the one before. The steepness, not the level, is the tell.</p></div>
+  <div><div class="k">§16.4 threshold · 45.3M</div><div class="n bad">1.4–2.2×</div><p>Walmart's final goal is 1.4× Frank's <em>high</em> case with a Sep 1 launch and 2.2× at Sep 24. Against the low tier the addendum sets pass/fail on, it is <b>14–27×</b>.</p></div>
+</div>
+
+<div class="callout">
+  <p><b>Read together, the two documents describe a pilot that cannot pass.</b> Actual visits would land about 100M below Annex A before SpeedWorkers adds its first visit, and the baseline error alone is 2.25× the entire 45.3M threshold. Then the threshold itself sits above the most optimistic outcome the model produces at any launch date.</p>
+  <p>None of this requires our numbers to be right and theirs wrong: the checks below use Walmart's own visit counts for scale and Walmart's own search history for shape. The only thing added is the direction the channel is already moving.</p>
+</div>
+
+<h2>What Walmart proposed</h2>
+<div class="docs">
+  <div class="doc">
+    <h3>Annex A — Baseline Document</h3>
+    <div class="src">§16.5 · "monthly Visit volumes … absent the impact of Botify SpeedWorkers"</div>
+    <table><thead><tr><th scope="col">Month</th><th scope="col">Baseline visits</th><th scope="col">vs prior month</th></tr></thead><tbody>
+      <tr><th scope="row">September</th><td class="claim">148,100,000</td><td>—</td></tr>
+      <tr><th scope="row">October</th><td class="claim">161,200,000</td><td>+8.8%</td></tr>
+      <tr><th scope="row">November</th><td class="claim">175,100,000</td><td>+8.6%</td></tr>
+      <tr><th scope="row">December</th><td class="claim">208,800,000</td><td class="bad">+19.2%</td></tr>
+      <tr class="total"><th scope="row">Sep–Dec</th><td>693,200,000</td><td>Dec/Sep 1.41</td></tr>
+    </tbody></table>
+    <p>Stated method: "a year-over-year run-rate methodology to Walmart's current performance." Walmart has since said the visits are those driven by <b>organic search engines and AI assistants</b>, measured in their internal analytics.</p>
+  </div>
+  <div class="doc">
+    <h3>§16.4 — Business Outcome Goal</h3>
+    <div class="src">Cumulative incremental Visits by the Measurement Close Date</div>
+    <table><thead><tr><th scope="col">By</th><th scope="col">Cumulative incremental visits</th><th scope="col">Added in period</th></tr></thead><tbody>
+      <tr><th scope="row">Sep 30</th><td class="claim">8,700,000</td><td>8.7M</td></tr>
+      <tr><th scope="row">Oct 31</th><td class="claim">18,400,000</td><td>9.7M</td></tr>
+      <tr><th scope="row">Nov 30</th><td class="claim">30,900,000</td><td>12.5M</td></tr>
+      <tr><th scope="row">Dec 20 (threshold)</th><td class="claim">45,300,000</td><td>14.4M</td></tr>
+    </tbody></table>
+    <p>The September checkpoint alone is 19% of the final threshold, which assumes near-full benefit from the first days of serving. Frank's adoption curve puts month one at 2–20% of full pace, and realistic go-live is now <b>Sep 24</b>, perhaps Sep 17.</p>
+  </div>
+</div>
+
+<h2>How the check is built</h2>
+<p class="prose">Annex A is denominated in Walmart's visits; our archive is denominated in search-engine clicks. Rather than argue about units, every link in the chain is taken from a Walmart document or from Walmart's own traffic history.</p>
+<ol class="chain">
+  <li><h3>Scale — visits per click, from Walmart's scorecards</h3><p>Walmart's Agentic Commerce scorecards state AI visits and AI's share of SEO visits in one sentence, so SEO visits fall out: <b>30.19M</b> in the week ending 23 May, <b>28.17M</b> the week after. Against Google+Bing clicks in the same weeks that is <span class="mono">R = 2.252</span> and <span class="mono">2.178</span> visits per click. The higher figure is used throughout — it is the one that flatters Annex A.</p></li>
+  <li><h3>Shape — Walmart's own Sep–Dec search history</h3><p>Google clicks Sep–Dec 2025 were 61.8M · 65.2M · 65.0M · 68.5M; Bing added 4.0M · 4.5M · 4.8M · 5.5M. AI-assistant visits are added flat at 1.448M a week (the two-scorecard mean; the last reading was falling 19% week on week, so flat is generous).</p></li>
+  <li><h3>Trend — the year-over-year Walmart's own method calls for</h3><p>Google clicks are down <b>10.8%</b> on 299 comparable days, and every month of 2026 is down: −7.5% in January widening to <b>−19.8%</b> in July. The last three months run −17.1%. Impressions are up 20% over the same span — this is CTR compression, not lost demand, and it is not reversing on its own.</p></li>
+</ol>
+
+<h2>The baseline, month by month</h2>
+<p class="prose">Three projections, all on Walmart's own shape and scale, differing only in the trend applied. Annex A tracks the zero-decline line for September, then pulls away from all three.</p>
+<figure>
+  <div class="legend"><span class="s-claim">Annex A baseline</span><span class="s-t1">No decline at all</span><span class="s-t2">Measured trend −10.8%</span><span class="s-t3">Recent trend −17.1%</span></div>
+  <svg class="chart" viewBox="0 0 860 340" role="img" aria-labelledby="c1-t">
+<title id="c1-t">Monthly visits, Sep–Dec 2026: Annex A against three projections</title>
+<line class="grid" x1="64" x2="610" y1="280.0" y2="280.0"/>
+<text class="tick" x="54" y="284.0" text-anchor="end">120M</text>
+<line class="grid" x1="64" x2="610" y1="226.1" y2="226.1"/>
+<text class="tick" x="54" y="230.1" text-anchor="end">140M</text>
+<line class="grid" x1="64" x2="610" y1="172.2" y2="172.2"/>
+<text class="tick" x="54" y="176.2" text-anchor="end">160M</text>
+<line class="grid" x1="64" x2="610" y1="118.3" y2="118.3"/>
+<text class="tick" x="54" y="122.3" text-anchor="end">180M</text>
+<line class="grid" x1="64" x2="610" y1="64.4" y2="64.4"/>
+<text class="tick" x="54" y="68.4" text-anchor="end">200M</text>
+<text class="tick" x="64.0" y="304" text-anchor="middle">Sep 2026</text>
+<text class="tick" x="246.0" y="304" text-anchor="middle">Oct 2026</text>
+<text class="tick" x="428.0" y="304" text-anchor="middle">Nov 2026</text>
+<text class="tick" x="610.0" y="304" text-anchor="middle">Dec 2026</text>
+<polyline class="line s-claim" points="64.0,204.3 246.0,169.0 428.0,131.5 610.0,40.7"/>
+<circle class="dot s-claim" cx="64.0" cy="204.3" r="4.5"/>
+<circle class="dot s-claim" cx="246.0" cy="169.0" r="4.5"/>
+<circle class="dot s-claim" cx="428.0" cy="131.5" r="4.5"/>
+<circle class="dot s-claim" cx="610.0" cy="40.7" r="4.5"/>
+<polyline class="line s-t1" points="64.0,187.6 246.0,162.5 428.0,163.3 610.0,135.8"/>
+<circle class="dot s-t1" cx="64.0" cy="187.6" r="4.5"/>
+<circle class="dot s-t1" cx="246.0" cy="162.5" r="4.5"/>
+<circle class="dot s-t1" cx="428.0" cy="163.3" r="4.5"/>
+<circle class="dot s-t1" cx="610.0" cy="135.8" r="4.5"/>
+<polyline class="line s-t2" points="64.0,228.0 246.0,205.4 428.0,205.9 610.0,180.8"/>
+<circle class="dot s-t2" cx="64.0" cy="228.0" r="4.5"/>
+<circle class="dot s-t2" cx="246.0" cy="205.4" r="4.5"/>
+<circle class="dot s-t2" cx="428.0" cy="205.9" r="4.5"/>
+<circle class="dot s-t2" cx="610.0" cy="180.8" r="4.5"/>
+<polyline class="line s-t3" points="64.0,251.7 246.0,230.1 428.0,230.7 610.0,207.0"/>
+<circle class="dot s-t3" cx="64.0" cy="251.7" r="4.5"/>
+<circle class="dot s-t3" cx="246.0" cy="230.1" r="4.5"/>
+<circle class="dot s-t3" cx="428.0" cy="230.7" r="4.5"/>
+<circle class="dot s-t3" cx="610.0" cy="207.0" r="4.5"/>
+<line class="leader" x1="616.0" x2="626.0" y1="40.7" y2="40.7"/>
+<text class="dlabel" x="630.0" y="37.7">Annex A baseline</text>
+<text class="dvalue s-claim" x="630.0" y="52.7">208.8M</text>
+<line class="leader" x1="616.0" x2="626.0" y1="135.8" y2="135.8"/>
+<text class="dlabel" x="630.0" y="132.8">No decline at all</text>
+<text class="dvalue s-t1" x="630.0" y="147.8">173.5M</text>
+<line class="leader" x1="616.0" x2="626.0" y1="180.8" y2="180.8"/>
+<text class="dlabel" x="630.0" y="177.8">Measured trend −10.8%</text>
+<text class="dvalue s-t2" x="630.0" y="192.8">156.8M</text>
+<line class="leader" x1="616.0" x2="626.0" y1="207.0" y2="210.8"/>
+<text class="dlabel" x="630.0" y="207.8">Recent trend −17.1%</text>
+<text class="dvalue s-t3" x="630.0" y="222.8">147.1M</text>
+<rect class="hit" x="-4.2" y="24" width="136.5" height="256" data-tip="<b>Sep 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 148.1M<br><span class=&quot;s-t1&quot;>No decline at all</span> 154.3M<br><span class=&quot;s-t2&quot;>Measured trend −10.8%</span> 139.3M<br><span class=&quot;s-t3&quot;>Recent trend −17.1%</span> 130.5M<br>"/>
+<rect class="hit" x="177.8" y="24" width="136.5" height="256" data-tip="<b>Oct 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 161.2M<br><span class=&quot;s-t1&quot;>No decline at all</span> 163.6M<br><span class=&quot;s-t2&quot;>Measured trend −10.8%</span> 147.7M<br><span class=&quot;s-t3&quot;>Recent trend −17.1%</span> 138.5M<br>"/>
+<rect class="hit" x="359.8" y="24" width="136.5" height="256" data-tip="<b>Nov 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 175.1M<br><span class=&quot;s-t1&quot;>No decline at all</span> 163.3M<br><span class=&quot;s-t2&quot;>Measured trend −10.8%</span> 147.5M<br><span class=&quot;s-t3&quot;>Recent trend −17.1%</span> 138.3M<br>"/>
+<rect class="hit" x="541.8" y="24" width="136.5" height="256" data-tip="<b>Dec 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 208.8M<br><span class=&quot;s-t1&quot;>No decline at all</span> 173.5M<br><span class=&quot;s-t2&quot;>Measured trend −10.8%</span> 156.8M<br><span class=&quot;s-t3&quot;>Recent trend −17.1%</span> 147.1M<br>"/>
+</svg>
+  <figcaption><b>September lands within 4% of a no-decline projection; December is 20% above it.</b> Whatever produced Annex A, it was not a run-rate of the channel it claims to describe: the growth embedded in the search part is <b>+6% year over year</b>, in a channel measured at −10.8%.</figcaption>
+</figure>
+<div class="tablewrap"><table>
+  <thead><tr><th scope="col">2026</th><th scope="col">Annex A</th><th scope="col">No decline</th><th scope="col">Measured −10.8%</th><th scope="col">Recent −17.1%</th><th scope="col">Annex A vs measured</th></tr></thead>
+  <tbody><tr><th scope="row">Sep</th><td class="claim">148.1M</td><td>154.3M</td><td>139.3M</td><td>130.5M</td><td class="">+6.3%</td></tr><tr><th scope="row">Oct</th><td class="claim">161.2M</td><td>163.6M</td><td>147.7M</td><td>138.5M</td><td class="">+9.1%</td></tr><tr><th scope="row">Nov</th><td class="claim">175.1M</td><td>163.3M</td><td>147.5M</td><td>138.3M</td><td class="bad">+18.7%</td></tr><tr><th scope="row">Dec</th><td class="claim">208.8M</td><td>173.5M</td><td>156.8M</td><td>147.1M</td><td class="bad">+33.2%</td></tr><tr class="total"><th scope="row">Sep–Dec</th><td class="claim">693.2M</td><td>654.7M</td><td>591.3M</td><td>554.4M</td><td class="bad">+17.2%</td></tr></tbody>
+</table></div>
+<p class="prose" style="font-size:14.5px">Visits = (Google + Bing clicks, same month 2025, grown by the trend) × 2.252, plus flat AI visits. Bing is held flat rather than at its measured −4.2%, again in Annex A's favour. For Annex A to be right, Walmart would need <b>2.66 visits per click</b>; their own scorecards give 2.18–2.25.</p>
+
+<h2>The shape test needs no conversion at all</h2>
+<p class="prose">Index each month to September on a per-day basis and the units drop out. Annex A's curve is a different curve from the one Walmart's search traffic actually follows into the holidays — and the 2024 season looked like 2025, so this is not a one-year artefact.</p>
+<figure>
+  <div class="legend"><span class="s-claim">Annex A baseline</span><span class="s-t2">Walmart's own search actuals, 2025</span></div>
+  <svg class="chart" viewBox="0 0 860 340" role="img" aria-labelledby="c2-t">
+<title id="c2-t">Per-day index, September = 100</title>
+<line class="grid" x1="64" x2="610" y1="252.8" y2="252.8"/>
+<text class="tick" x="54" y="256.8" text-anchor="end">100</text>
+<line class="grid" x1="64" x2="610" y1="198.3" y2="198.3"/>
+<text class="tick" x="54" y="202.3" text-anchor="end">110</text>
+<line class="grid" x1="64" x2="610" y1="143.8" y2="143.8"/>
+<text class="tick" x="54" y="147.8" text-anchor="end">120</text>
+<line class="grid" x1="64" x2="610" y1="89.4" y2="89.4"/>
+<text class="tick" x="54" y="93.4" text-anchor="end">130</text>
+<line class="grid" x1="64" x2="610" y1="34.9" y2="34.9"/>
+<text class="tick" x="54" y="38.9" text-anchor="end">140</text>
+<text class="tick" x="64.0" y="304" text-anchor="middle">Sep 2026</text>
+<text class="tick" x="246.0" y="304" text-anchor="middle">Oct 2026</text>
+<text class="tick" x="428.0" y="304" text-anchor="middle">Nov 2026</text>
+<text class="tick" x="610.0" y="304" text-anchor="middle">Dec 2026</text>
+<polyline class="line s-claim" points="64.0,252.8 246.0,223.9 428.0,153.6 610.0,54.5"/>
+<circle class="dot s-claim" cx="64.0" cy="252.8" r="4.5"/>
+<circle class="dot s-claim" cx="246.0" cy="223.9" r="4.5"/>
+<circle class="dot s-claim" cx="428.0" cy="153.6" r="4.5"/>
+<circle class="dot s-claim" cx="610.0" cy="54.5" r="4.5"/>
+<polyline class="line s-t2" points="64.0,252.8 246.0,238.1 428.0,219.5 610.0,202.7"/>
+<circle class="dot s-t2" cx="64.0" cy="252.8" r="4.5"/>
+<circle class="dot s-t2" cx="246.0" cy="238.1" r="4.5"/>
+<circle class="dot s-t2" cx="428.0" cy="219.5" r="4.5"/>
+<circle class="dot s-t2" cx="610.0" cy="202.7" r="4.5"/>
+<line class="leader" x1="616.0" x2="626.0" y1="54.5" y2="54.5"/>
+<text class="dlabel" x="630.0" y="51.5">Annex A baseline</text>
+<text class="dvalue s-claim" x="630.0" y="66.5">136.4</text>
+<line class="leader" x1="616.0" x2="626.0" y1="202.7" y2="202.7"/>
+<text class="dlabel" x="630.0" y="199.7">Walmart's own search actuals, 2025</text>
+<text class="dvalue s-t2" x="630.0" y="214.7">109.2</text>
+<rect class="hit" x="-4.2" y="24" width="136.5" height="256" data-tip="<b>Sep 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 100.0<br><span class=&quot;s-t2&quot;>Walmart's own search actuals, 2025</span> 100.0<br>"/>
+<rect class="hit" x="177.8" y="24" width="136.5" height="256" data-tip="<b>Oct 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 105.3<br><span class=&quot;s-t2&quot;>Walmart's own search actuals, 2025</span> 102.7<br>"/>
+<rect class="hit" x="359.8" y="24" width="136.5" height="256" data-tip="<b>Nov 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 118.2<br><span class=&quot;s-t2&quot;>Walmart's own search actuals, 2025</span> 106.1<br>"/>
+<rect class="hit" x="541.8" y="24" width="136.5" height="256" data-tip="<b>Dec 2026</b><br><span class=&quot;s-claim&quot;>Annex A baseline</span> 136.4<br><span class=&quot;s-t2&quot;>Walmart's own search actuals, 2025</span> 109.2<br>"/>
+</svg>
+  <figcaption><b>Dec/Nov: Annex A 1.19 · actual 1.06 (2025) and 1.07 (2024).</b> Walmart's holiday surge in search is real but branded, and modest — total Google clicks rose 11% from September to December last year, not 41%. A 41% climb is what total-site or all-channel traffic does, which is the wrong channel for an organic pilot.</figcaption>
+</figure>
+
+<h2>The goals, against Frank's model</h2>
+<p class="prose"><code class="mono">forecast.py</code> reproduces the addendum's quantum exactly (1,418,146 / 5,980,799 / 13,653,665 clicks to the Dec 20 close, Sep 1 launch). Below it is re-run at the launch dates now on the table, its clicks converted to visits at the same 2.252, and its AI-visit series added — Walmart's unit, Walmart's channel definition.</p>
+<figure>
+  <div class="legend"><span class="s-claim dash">Walmart §16.4 goals</span><span class="s-t1">High case, launch Sep 1</span><span class="s-t2">High case, launch Sep 17</span><span class="s-t3">High case, launch Sep 24</span><span class="s-t3 dash">Low case, launch Sep 24</span></div>
+  <svg class="chart" viewBox="0 0 860 380" role="img" aria-labelledby="c3-t">
+<title id="c3-t">Cumulative incremental visits to the Dec 20 close: Walmart’s goals against Frank’s model</title>
+<line class="grid" x1="64" x2="610" y1="320.0" y2="320.0"/>
+<text class="tick" x="54" y="324.0" text-anchor="end">0M</text>
+<line class="grid" x1="64" x2="610" y1="260.8" y2="260.8"/>
+<text class="tick" x="54" y="264.8" text-anchor="end">10M</text>
+<line class="grid" x1="64" x2="610" y1="201.6" y2="201.6"/>
+<text class="tick" x="54" y="205.6" text-anchor="end">20M</text>
+<line class="grid" x1="64" x2="610" y1="142.4" y2="142.4"/>
+<text class="tick" x="54" y="146.4" text-anchor="end">30M</text>
+<line class="grid" x1="64" x2="610" y1="83.2" y2="83.2"/>
+<text class="tick" x="54" y="87.2" text-anchor="end">40M</text>
+<line class="grid" x1="64" x2="610" y1="24.0" y2="24.0"/>
+<text class="tick" x="54" y="28.0" text-anchor="end">50M</text>
+<text class="tick" x="64.0" y="344" text-anchor="middle">Sep 1</text>
+<text class="tick" x="207.9" y="344" text-anchor="middle">Sep 30</text>
+<text class="tick" x="361.8" y="344" text-anchor="middle">Oct 31</text>
+<text class="tick" x="510.7" y="344" text-anchor="middle">Nov 30</text>
+<text class="tick" x="610.0" y="344" text-anchor="middle">Dec 20</text>
+<line class="marker" x1="143.4" x2="143.4" y1="24" y2="320"/>
+<text class="tick" x="147.4" y="36">launch 9/17</text>
+<line class="marker" x1="178.2" x2="178.2" y1="24" y2="320"/>
+<text class="tick" x="182.2" y="52">launch 9/24</text>
+<polyline class="line s-t1" points="64.0,320.0 64.0,320.0 64.0,319.8 69.0,319.6 73.9,319.3 78.9,319.1 83.9,318.9 88.8,318.7 93.8,318.5 98.7,318.0 103.7,317.6 108.7,317.1 113.6,316.7 118.6,316.3 123.6,315.8 128.5,315.4 133.5,314.7 138.5,314.1 143.4,313.4 148.4,312.7 153.3,312.1 158.3,311.4 163.3,310.8 168.2,310.1 173.2,309.4 178.2,308.8 183.1,308.1 188.1,307.4 193.1,306.8 198.0,306.1 203.0,305.5 207.9,304.8 212.9,303.8 217.9,302.9 222.8,301.9 227.8,300.9 232.8,300.0 237.7,299.0 242.7,298.0 247.7,296.8 252.6,295.5 257.6,294.3 262.5,293.0 267.5,291.7 272.5,290.5 277.4,289.2 282.4,287.7 287.4,286.2 292.3,284.6 297.3,283.1 302.3,281.5 307.2,280.0 312.2,278.5 317.1,276.9 322.1,275.4 327.1,273.8 332.0,272.3 337.0,270.8 342.0,269.2 346.9,267.7 351.9,266.1 356.9,264.6 361.8,262.8 366.8,260.9 371.7,259.1 376.7,257.3 381.7,255.4 386.6,253.6 391.6,251.8 396.6,249.7 401.5,247.5 406.5,245.4 411.5,243.3 416.4,241.2 421.4,239.1 426.3,236.9 431.3,234.5 436.3,232.1 441.2,229.7 446.2,227.3 451.2,224.9 456.1,222.5 461.1,220.1 466.1,217.7 471.0,215.3 476.0,212.9 480.9,210.5 485.9,208.1 490.9,205.7 495.8,203.3 500.8,200.8 505.8,198.4 510.7,195.8 515.7,193.0 520.7,190.2 525.6,187.4 530.6,184.6 535.5,181.8 540.5,179.0 545.5,175.9 550.4,172.9 555.4,169.8 560.4,166.7 565.3,163.7 570.3,160.6 575.3,157.6 580.2,154.3 585.2,151.0 590.1,147.7 595.1,144.4 600.1,141.1 605.0,137.8 610.0,134.5"/>
+<polyline class="line s-t2" points="64.0,320.0 143.4,320.0 143.4,319.8 148.4,319.6 153.3,319.3 158.3,319.1 163.3,318.9 168.2,318.7 173.2,318.5 178.2,318.0 183.1,317.6 188.1,317.1 193.1,316.7 198.0,316.3 203.0,315.8 207.9,315.4 212.9,314.7 217.9,314.0 222.8,313.3 227.8,312.6 232.8,312.0 237.7,311.3 242.7,310.6 247.7,309.9 252.6,309.2 257.6,308.5 262.5,307.8 267.5,307.2 272.5,306.5 277.4,305.8 282.4,305.1 287.4,304.4 292.3,303.5 297.3,302.5 302.3,301.5 307.2,300.5 312.2,299.6 317.1,298.6 322.1,297.6 327.1,296.4 332.0,295.1 337.0,293.9 342.0,292.6 346.9,291.4 351.9,290.1 356.9,288.9 361.8,287.3 366.8,285.8 371.7,284.2 376.7,282.7 381.7,281.1 386.6,279.6 391.6,278.0 396.6,276.5 401.5,274.9 406.5,273.4 411.5,271.8 416.4,270.3 421.4,268.8 426.3,267.2 431.3,265.7 436.3,264.1 441.2,262.3 446.2,260.4 451.2,258.6 456.1,256.8 461.1,254.9 466.1,253.1 471.0,251.3 476.0,249.2 480.9,247.0 485.9,244.9 490.9,242.8 495.8,240.7 500.8,238.6 505.8,236.4 510.7,234.0 515.7,231.5 520.7,228.9 525.6,226.3 530.6,223.8 535.5,221.2 540.5,218.7 545.5,216.1 550.4,213.5 555.4,211.0 560.4,208.4 565.3,205.8 570.3,203.3 575.3,200.7 580.2,198.1 585.2,195.6 590.1,192.8 595.1,190.0 600.1,187.2 605.0,184.3 610.0,181.5"/>
+<polyline class="line s-t3" points="64.0,320.0 178.2,320.0 178.2,319.8 183.1,319.6 188.1,319.3 193.1,319.1 198.0,318.9 203.0,318.7 207.9,318.5 212.9,318.0 217.9,317.5 222.8,317.1 227.8,316.6 232.8,316.2 237.7,315.7 242.7,315.3 247.7,314.6 252.6,313.9 257.6,313.2 262.5,312.5 267.5,311.8 272.5,311.2 277.4,310.5 282.4,309.8 287.4,309.1 292.3,308.4 297.3,307.7 302.3,307.1 307.2,306.4 312.2,305.7 317.1,305.0 322.1,304.3 327.1,303.3 332.0,302.4 337.0,301.4 342.0,300.4 346.9,299.5 351.9,298.5 356.9,297.5 361.8,296.3 366.8,295.0 371.7,293.8 376.7,292.5 381.7,291.2 386.6,290.0 391.6,288.7 396.6,287.2 401.5,285.6 406.5,284.1 411.5,282.5 416.4,281.0 421.4,279.4 426.3,277.9 431.3,276.3 436.3,274.8 441.2,273.2 446.2,271.7 451.2,270.1 456.1,268.6 461.1,267.1 466.1,265.5 471.0,264.0 476.0,262.1 480.9,260.3 485.9,258.5 490.9,256.6 495.8,254.8 500.8,253.0 505.8,251.1 510.7,249.0 515.7,246.8 520.7,244.5 525.6,242.2 530.6,240.0 535.5,237.7 540.5,235.5 545.5,232.9 550.4,230.3 555.4,227.8 560.4,225.2 565.3,222.6 570.3,220.1 575.3,217.5 580.2,214.9 585.2,212.4 590.1,209.8 595.1,207.3 600.1,204.7 605.0,202.1 610.0,199.6"/>
+<polyline class="line s-t3" stroke-dasharray="6 5" points="64.0,320.0 178.2,320.0 178.2,320.0 183.1,320.0 188.1,320.0 193.1,320.0 198.0,320.0 203.0,320.0 207.9,319.9 212.9,319.9 217.9,319.9 222.8,319.9 227.8,319.9 232.8,319.9 237.7,319.8 242.7,319.8 247.7,319.8 252.6,319.8 257.6,319.8 262.5,319.7 267.5,319.7 272.5,319.7 277.4,319.7 282.4,319.6 287.4,319.6 292.3,319.6 297.3,319.6 302.3,319.5 307.2,319.5 312.2,319.5 317.1,319.5 322.1,319.4 327.1,319.4 332.0,319.3 337.0,319.3 342.0,319.2 346.9,319.2 351.9,319.1 356.9,319.1 361.8,319.0 366.8,318.9 371.7,318.9 376.7,318.8 381.7,318.7 386.6,318.6 391.6,318.6 396.6,318.5 401.5,318.4 406.5,318.3 411.5,318.2 416.4,318.1 421.4,318.0 426.3,317.9 431.3,317.8 436.3,317.7 441.2,317.6 446.2,317.5 451.2,317.4 456.1,317.3 461.1,317.2 466.1,317.1 471.0,317.0 476.0,316.8 480.9,316.7 485.9,316.5 490.9,316.3 495.8,316.2 500.8,316.0 505.8,315.9 510.7,315.7 515.7,315.4 520.7,315.2 525.6,315.0 530.6,314.7 535.5,314.5 540.5,314.3 545.5,314.0 550.4,313.7 555.4,313.4 560.4,313.1 565.3,312.8 570.3,312.5 575.3,312.2 580.2,312.0 585.2,311.7 590.1,311.4 595.1,311.1 600.1,310.8 605.0,310.5 610.0,310.2"/>
+<polyline class="line s-claim" stroke-dasharray="2 4" points="64.0,320.0 207.9,320.0 207.9,268.5 361.8,268.5 361.8,211.1 510.7,211.1 510.7,137.1 610.0,137.1 610.0,51.8"/>
+<rect class="dot s-claim" x="202.9" y="263.5" width="10" height="10" transform="rotate(45 207.9 268.5)"/>
+<text class="dvalue s-claim" x="207.9" y="258.5" text-anchor="middle">8.7M</text>
+<rect class="dot s-claim" x="356.8" y="206.1" width="10" height="10" transform="rotate(45 361.8 211.1)"/>
+<text class="dvalue s-claim" x="361.8" y="201.1" text-anchor="middle">18.4M</text>
+<rect class="dot s-claim" x="505.7" y="132.1" width="10" height="10" transform="rotate(45 510.7 137.1)"/>
+<text class="dvalue s-claim" x="510.7" y="127.1" text-anchor="middle">30.9M</text>
+<rect class="dot s-claim" x="605.0" y="46.8" width="10" height="10" transform="rotate(45 610.0 51.8)"/>
+<text class="dvalue s-claim" x="610.0" y="41.8" text-anchor="middle">45.3M</text>
+<line class="leader" x1="616" x2="626" y1="51.8" y2="51.8"/>
+<text class="dlabel" x="630" y="48.8">Walmart §16.4 threshold</text>
+<text class="dvalue s-claim" x="630" y="63.8">45.3M</text>
+<line class="leader" x1="616" x2="626" y1="134.5" y2="134.5"/>
+<text class="dlabel" x="630" y="131.5">High case, launch Sep 1</text>
+<text class="dvalue s-t1" x="630" y="146.5">31.3M</text>
+<line class="leader" x1="616" x2="626" y1="181.5" y2="181.5"/>
+<text class="dlabel" x="630" y="178.5">High case, launch Sep 17</text>
+<text class="dvalue s-t2" x="630" y="193.5">23.4M</text>
+<line class="leader" x1="616" x2="626" y1="199.6" y2="211.5"/>
+<text class="dlabel" x="630" y="208.5">High case, launch Sep 24</text>
+<text class="dvalue s-t3" x="630" y="223.5">20.3M</text>
+<line class="leader" x1="616" x2="626" y1="310.2" y2="310.2"/>
+<text class="dlabel" x="630" y="307.2">Low case (pass/fail tier), launch Sep 24</text>
+<text class="dvalue s-t3" x="630" y="322.2">1.7M</text>
+<rect class="hit" x="185.9" y="24" width="44" height="296" data-tip="<b>by Sep 30</b><br><span class=&quot;s-claim&quot;>Walmart goal</span> 8.7M<br><span class=&quot;s-t1&quot;>High case, launch Sep 1</span> 2.57M<br><span class=&quot;s-t2&quot;>High case, launch Sep 17</span> 0.78M<br><span class=&quot;s-t3&quot;>High case, launch Sep 24</span> 0.26M<br><span class=&quot;s-t3&quot;>Low case (pass/fail tier), launch Sep 24</span> 0.01M<br>"/>
+<rect class="hit" x="339.8" y="24" width="44" height="296" data-tip="<b>by Oct 31</b><br><span class=&quot;s-claim&quot;>Walmart goal</span> 18.4M<br><span class=&quot;s-t1&quot;>High case, launch Sep 1</span> 9.67M<br><span class=&quot;s-t2&quot;>High case, launch Sep 17</span> 5.52M<br><span class=&quot;s-t3&quot;>High case, launch Sep 24</span> 4.01M<br><span class=&quot;s-t3&quot;>Low case (pass/fail tier), launch Sep 24</span> 0.17M<br>"/>
+<rect class="hit" x="488.7" y="24" width="44" height="296" data-tip="<b>by Nov 30</b><br><span class=&quot;s-claim&quot;>Walmart goal</span> 30.9M<br><span class=&quot;s-t1&quot;>High case, launch Sep 1</span> 20.98M<br><span class=&quot;s-t2&quot;>High case, launch Sep 17</span> 14.52M<br><span class=&quot;s-t3&quot;>High case, launch Sep 24</span> 11.99M<br><span class=&quot;s-t3&quot;>Low case (pass/fail tier), launch Sep 24</span> 0.73M<br>"/>
+<rect class="hit" x="588.0" y="24" width="44" height="296" data-tip="<b>by Dec 20</b><br><span class=&quot;s-claim&quot;>Walmart goal</span> 45.3M<br><span class=&quot;s-t1&quot;>High case, launch Sep 1</span> 31.33M<br><span class=&quot;s-t2&quot;>High case, launch Sep 17</span> 23.39M<br><span class=&quot;s-t3&quot;>High case, launch Sep 24</span> 20.34M<br><span class=&quot;s-t3&quot;>Low case (pass/fail tier), launch Sep 24</span> 1.65M<br>"/>
+</svg>
+  <figcaption><b>No tier at any launch date reaches any checkpoint.</b> The September goal of 8.7M needs more incremental visits in the first week or two of serving than the model's high case earns by Halloween.</figcaption>
+</figure>
+<div class="tablewrap"><table>
+  <thead><tr><th scope="col">Cumulative incremental visits</th><th scope="col">Sep 30</th><th scope="col">Oct 31</th><th scope="col">Nov 30</th><th scope="col">Dec 20</th><th scope="col">Goal ÷ high</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Walmart §16.4 goal</th><td class="claim">8.7M</td><td class="claim">18.4M</td><td class="claim">30.9M</td><td class="claim">45.3M</td><td>—</td></tr>
+    <tr><th scope="row">High case · launch Sep 1</th><td>2.57M</td><td>9.67M</td><td>20.98M</td><td>31.33M</td><td class="bad">1.4×</td></tr>
+    <tr><th scope="row">High case · launch Sep 17</th><td>0.78M</td><td>5.52M</td><td>14.52M</td><td>23.39M</td><td class="bad">1.9×</td></tr>
+    <tr><th scope="row">High case · launch Sep 24</th><td>0.26M</td><td>4.01M</td><td>11.99M</td><td>20.34M</td><td class="bad">2.2×</td></tr>
+    <tr><th scope="row">Mid case · launch Sep 24</th><td>0.10M</td><td>1.52M</td><td>4.77M</td><td>8.48M</td><td class="bad">5.3×</td></tr>
+    <tr><th scope="row">Low case (pass/fail tier) · Sep 1</th><td>0.09M</td><td>0.53M</td><td>1.74M</td><td>3.28M</td><td class="bad">13.8×</td></tr>
+    <tr><th scope="row">Low case (pass/fail tier) · Sep 24</th><td>0.01M</td><td>0.17M</td><td>0.73M</td><td>1.65M</td><td class="bad">27.4×</td></tr>
+  </tbody>
+</table></div>
+<div class="two">
+  <div><h3>The launch slip does two things, and only one is relieved</h3>
+    <ul>
+      <li><b>Full Scale is gone.</b> The 80%-served gate is fixed at Sep 30. At 250 URLs/s and 707M pages, a Sep 17 launch reaches 39.7% by then; Sep 24 reaches 18.3%. §7.4 Adjustment Days relieve thresholds; nothing restores a missed gate, and FOC (d) needs Full Scale held ~12 weeks.</li>
+      <li><b>Even relieved, 45.3M is out of reach.</b> Apply the Adjustment-Day calibration to Walmart's number: 16 days (Sep 17) retains 62% → 28.3M against a high case of 23.4M; 23 days (Sep 24) retains 50% → 22.8M against 20.3M. The <em>most</em> optimistic tier still misses the <em>relieved</em> threshold.</li>
+      <li><b>Where 45.3M may come from.</b> It sits close to the customer-facing deck's high case (23.6M clicks ≈ 48–53M visits) — a figure Frank's correction memo restated 30–40% lower, and never the commitment tier. Worth confirming before it is argued about.</li>
+    </ul>
+  </div>
+  <div><h3>What the low tier means here</h3>
+    <ul>
+      <li>The addendum sets pass/fail at the <b>low</b> bundle: 1.42M incremental clicks to the close, about 3.2M visits with AI, on a Sep 1 launch. Walmart's threshold is fourteen times that.</li>
+      <li>For Frank's high case to produce 45.3M, visits would have to run at <b>3.3 visits per click</b> (Sep 1) or <b>5.1</b> (Sep 24). Walmart's own scorecards say 2.2.</li>
+      <li>The Botify lift acts on non-branded search, which is 6% of the combined base; Annex A's 100M error is on the whole base. A 1.8% error in the baseline is a larger number than the whole low-case lift.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>What to take back to Walmart</h2>
+<ul class="asks">
+  <li><b>Ask for the Annex A worksheet.</b> Which months were the base, which year-over-year rate was applied, and to which channel. Our read of their own Search Console is −10.8% on the year and −17% recently; the Annex implies +6%. If the rate came from total-site or all-channel visits, the baseline is measuring a channel the pilot does not touch.</li>
+  <li><b>Ask where the Sep→Dec curve comes from.</b> Their organic search history says Dec/Sep is 1.13; the Annex says 1.41. That single question resolves most of the 100M.</li>
+  <li><b>Propose the baseline Frank already built.</b> Walmart's own SEO + AI visits for 1 Sep – 20 Dec 2025 from the same system of record, grown by the measured trend, countersigned before go-live — <code class="mono">derive_baseline_freeze.py --document</code> emits it. Better still, the URL-hash holdout Frank is confirming with engineering makes the projected baseline moot.</li>
+  <li><b>Re-anchor the goals to the go-live date and to the model's tiers.</b> The Sep 30 checkpoint is unreachable at any launch after Sep 1 (8.7M in ≤13 days at under 20% adoption). Checkpoints should be launch-relative, the Target Full Scale Date should move with go-live, and the threshold should be the low tier the addendum already names — or Walmart should say which tier they believe they are signing.</li>
+  <li><b>Close AOV and conversion rate while the numbers are open.</b> Unrelated to visits, but they scale every revenue figure Walmart signs against and remain unverified. Frank's note: the highest-value thing anyone can close.</li>
+</ul>
+
+<h2>What would change this reading</h2>
+<div class="two">
+  <div><ul>
+    <li>Walmart's analytics showing organic + AI visits Sep–Dec 2025 materially above 2.25× our click archive — i.e. a different, documented R.</li>
+    <li>A Walmart-side seasonal history for organic visits with a Dec/Sep ratio near 1.4. Nothing in Search Console or Bing Webmaster Tools looks like that in either year we hold.</li>
+    <li>Evidence the 2026 decline has reversed since 9 August. The July reading was the worst in the series.</li>
+  </ul></div>
+  <div><ul>
+    <li>R rests on two scorecard weeks in May and is applied to non-branded incremental clicks as if the ratio were the same. Bing months are rebuilt from the BWT monthly index and a 12-month total; they match the day file to within rounding.</li>
+    <li>AI visits are held flat with no seasonality, per Frank's model; two weekly points is not a trend, and both fell inside a window Walmart flagged as volatile.</li>
+    <li>Frank's model carries its own open items — the 60% indexation dial, 70% anonymized inclusion, unverified RPV. None of them bears on visits; the high case used here is the model's ceiling, not a claim.</li>
+  </ul></div>
+</div>
+
+<div class="sources">
+  <p><b>Reproduce it.</b> <code>python3 analysis/baseline_check.py</code> · <code>python3 analysis/model/goals_check.py</code> — both in this repo; the model directory is Frank's <code>forecast.py</code> with its 11 Aug snapshots, unchanged.</p>
+  <p><b>Sources.</b> Google Search Console, walmart.com US/Web, day grain, 2024-10-15 → 2026-08-09, bucketed non-branded / branded / anonymized (Frank's <code>data/raw/gsc_daily/2026-08-11.json</code>). Bing Webmaster Tools, walmart-global, 514 days to 2026-08-08. Walmart Agentic Commerce Scorecards W16–W17 FY27 (fwd A. Cantelmo). Frank Vitovitch, <em>Walmart Pilot Measurement Framework</em>: <code>STATE.md</code>, <code>HANDOFF-TO-RYAN.md</code>, <code>CORRECTION-MEMO.md</code>, <code>forecast.py</code>, 13 Aug 2026. Annex A and §16.4 as received from Walmart, Sep 2026.</p>
+</div>
+</div>
+<div id="tip" hidden></div>
+<script>
+(function(){
+  var tip=document.getElementById('tip');
+  document.querySelectorAll('.hit').forEach(function(h){
+    h.addEventListener('mouseenter',function(){tip.innerHTML=h.getAttribute('data-tip');tip.hidden=false;});
+    h.addEventListener('mousemove',function(e){var x=e.clientX+14,y=e.clientY+14;var r=tip.getBoundingClientRect();if(x+r.width>window.innerWidth-8)x=e.clientX-r.width-14;if(y+r.height>window.innerHeight-8)y=e.clientY-r.height-14;tip.style.left=x+'px';tip.style.top=y+'px';});
+    h.addEventListener('mouseleave',function(){tip.hidden=true;});
+  });
+})();
+</script>

@@ -1,0 +1,986 @@
+{
+ "snapshot_date": "2026-08-11",
+ "window": [
+  "2025-08-01",
+  "2026-07-31"
+ ],
+ "scope": "property total for every engine \u2014 the only scope where Bing has data and where a combined figure is legitimate",
+ "engines": {
+  "google": {
+   "label": "Google",
+   "note": "All buckets: non-branded + branded + anonymized",
+   "days": 365,
+   "totals": {
+    "impressions": 42596367364,
+    "clicks": 703410509
+   },
+   "monthly": {
+    "1": {
+     "total": 57801966,
+     "days": 31
+    },
+    "2": {
+     "total": 50809441,
+     "days": 28
+    },
+    "3": {
+     "total": 54706459,
+     "days": 31
+    },
+    "4": {
+     "total": 51656370,
+     "days": 30
+    },
+    "5": {
+     "total": 54206995,
+     "days": 31
+    },
+    "6": {
+     "total": 52650604,
+     "days": 30
+    },
+    "7": {
+     "total": 53135522,
+     "days": 31
+    },
+    "8": {
+     "total": 67855371,
+     "days": 31
+    },
+    "9": {
+     "total": 61840965,
+     "days": 30
+    },
+    "10": {
+     "total": 65221322,
+     "days": 31
+    },
+    "11": {
+     "total": 64983991,
+     "days": 30
+    },
+    "12": {
+     "total": 68541503,
+     "days": 31
+    }
+   },
+   "monthlyByDate": {
+    "2025-08": {
+     "total": 67855371,
+     "days": 31
+    },
+    "2025-09": {
+     "total": 61840965,
+     "days": 30
+    },
+    "2025-10": {
+     "total": 65221322,
+     "days": 31
+    },
+    "2025-11": {
+     "total": 64983991,
+     "days": 30
+    },
+    "2025-12": {
+     "total": 68541503,
+     "days": 31
+    },
+    "2026-01": {
+     "total": 57801966,
+     "days": 31
+    },
+    "2026-02": {
+     "total": 50809441,
+     "days": 28
+    },
+    "2026-03": {
+     "total": 54706459,
+     "days": 31
+    },
+    "2026-04": {
+     "total": 51656370,
+     "days": 30
+    },
+    "2026-05": {
+     "total": 54206995,
+     "days": 31
+    },
+    "2026-06": {
+     "total": 52650604,
+     "days": 30
+    },
+    "2026-07": {
+     "total": 53135522,
+     "days": 31
+    }
+   },
+   "monthlyFull": {
+    "2024-11": {
+     "total": 72066693,
+     "days": 30
+    },
+    "2024-12": {
+     "total": 77364944,
+     "days": 31
+    },
+    "2025-01": {
+     "total": 62473139,
+     "days": 31
+    },
+    "2025-02": {
+     "total": 51748420,
+     "days": 28
+    },
+    "2025-03": {
+     "total": 57977675,
+     "days": 31
+    },
+    "2025-04": {
+     "total": 57331151,
+     "days": 30
+    },
+    "2025-05": {
+     "total": 63682972,
+     "days": 31
+    },
+    "2025-06": {
+     "total": 63102576,
+     "days": 30
+    },
+    "2025-07": {
+     "total": 66290448,
+     "days": 31
+    },
+    "2025-08": {
+     "total": 67855371,
+     "days": 31
+    },
+    "2025-09": {
+     "total": 61840965,
+     "days": 30
+    },
+    "2025-10": {
+     "total": 65221322,
+     "days": 31
+    },
+    "2025-11": {
+     "total": 64983991,
+     "days": 30
+    },
+    "2025-12": {
+     "total": 68541503,
+     "days": 31
+    },
+    "2026-01": {
+     "total": 57801966,
+     "days": 31
+    },
+    "2026-02": {
+     "total": 50809441,
+     "days": 28
+    },
+    "2026-03": {
+     "total": 54706459,
+     "days": 31
+    },
+    "2026-04": {
+     "total": 51656370,
+     "days": 30
+    },
+    "2026-05": {
+     "total": 54206995,
+     "days": 31
+    },
+    "2026-06": {
+     "total": 52650604,
+     "days": 30
+    },
+    "2026-07": {
+     "total": 53135522,
+     "days": 31
+    }
+   },
+   "seasonality": {
+    "clicks": {
+     "1": 0.968,
+     "2": 0.9421,
+     "3": 0.9162,
+     "4": 0.8939,
+     "5": 0.9078,
+     "6": 0.9111,
+     "7": 0.8898,
+     "8": 1.1364,
+     "9": 1.0702,
+     "10": 1.0922,
+     "11": 1.1245,
+     "12": 1.1478
+    },
+    "impressions": {
+     "1": 0.8759,
+     "2": 1.0526,
+     "3": 0.9574,
+     "4": 1.3009,
+     "5": 1.1918,
+     "6": 0.9439,
+     "7": 0.7502,
+     "8": 1.0522,
+     "9": 0.992,
+     "10": 0.9231,
+     "11": 0.9875,
+     "12": 0.9722
+    }
+   },
+   "yoy": {
+    "window_prior": [
+     "2024-10-15",
+     "2025-08-09"
+    ],
+    "window_recent": [
+     "2025-10-15",
+     "2026-08-09"
+    ],
+    "days": 299,
+    "clicks": -0.10835,
+    "impressions": 0.2038,
+    "prior": {
+     "impressions": 28744449190,
+     "clicks": 627927933
+    },
+    "recent": {
+     "impressions": 34602648658,
+     "clicks": 559893537
+    }
+   },
+   "anonClicks": 445640472
+  },
+  "bing": {
+   "label": "Bing",
+   "note": "Property total. No brand split exists in the day-grain store",
+   "days": 365,
+   "totals": {
+    "impressions": 7949954268,
+    "clicks": 54161288
+   },
+   "monthly": {
+    "1": {
+     "total": 5200138,
+     "days": 31
+    },
+    "2": {
+     "total": 3978546,
+     "days": 28
+    },
+    "3": {
+     "total": 4363144,
+     "days": 31
+    },
+    "4": {
+     "total": 4146539,
+     "days": 30
+    },
+    "5": {
+     "total": 4180881,
+     "days": 31
+    },
+    "6": {
+     "total": 4250798,
+     "days": 30
+    },
+    "7": {
+     "total": 4372456,
+     "days": 31
+    },
+    "8": {
+     "total": 4836843,
+     "days": 31
+    },
+    "9": {
+     "total": 3972827,
+     "days": 30
+    },
+    "10": {
+     "total": 4486471,
+     "days": 31
+    },
+    "11": {
+     "total": 4833230,
+     "days": 30
+    },
+    "12": {
+     "total": 5539415,
+     "days": 31
+    }
+   },
+   "monthlyByDate": {
+    "2025-08": {
+     "total": 4836843,
+     "days": 31
+    },
+    "2025-09": {
+     "total": 3972827,
+     "days": 30
+    },
+    "2025-10": {
+     "total": 4486471,
+     "days": 31
+    },
+    "2025-11": {
+     "total": 4833230,
+     "days": 30
+    },
+    "2025-12": {
+     "total": 5539415,
+     "days": 31
+    },
+    "2026-01": {
+     "total": 5200138,
+     "days": 31
+    },
+    "2026-02": {
+     "total": 3978546,
+     "days": 28
+    },
+    "2026-03": {
+     "total": 4363144,
+     "days": 31
+    },
+    "2026-04": {
+     "total": 4146539,
+     "days": 30
+    },
+    "2026-05": {
+     "total": 4180881,
+     "days": 31
+    },
+    "2026-06": {
+     "total": 4250798,
+     "days": 30
+    },
+    "2026-07": {
+     "total": 4372456,
+     "days": 31
+    }
+   },
+   "monthlyFull": {
+    "2025-04": {
+     "total": 4061970,
+     "days": 30
+    },
+    "2025-05": {
+     "total": 4537563,
+     "days": 31
+    },
+    "2025-06": {
+     "total": 4679681,
+     "days": 30
+    },
+    "2025-07": {
+     "total": 4831088,
+     "days": 31
+    },
+    "2025-08": {
+     "total": 4836843,
+     "days": 31
+    },
+    "2025-09": {
+     "total": 3972827,
+     "days": 30
+    },
+    "2025-10": {
+     "total": 4486471,
+     "days": 31
+    },
+    "2025-11": {
+     "total": 4833230,
+     "days": 30
+    },
+    "2025-12": {
+     "total": 5539415,
+     "days": 31
+    },
+    "2026-01": {
+     "total": 5200138,
+     "days": 31
+    },
+    "2026-02": {
+     "total": 3978546,
+     "days": 28
+    },
+    "2026-03": {
+     "total": 4363144,
+     "days": 31
+    },
+    "2026-04": {
+     "total": 4146539,
+     "days": 30
+    },
+    "2026-05": {
+     "total": 4180881,
+     "days": 31
+    },
+    "2026-06": {
+     "total": 4250798,
+     "days": 30
+    },
+    "2026-07": {
+     "total": 4372456,
+     "days": 31
+    }
+   },
+   "seasonality": {
+    "clicks": {
+     "1": 1.1313,
+     "2": 0.9582,
+     "3": 0.9492,
+     "4": 0.9321,
+     "5": 0.9095,
+     "6": 0.9556,
+     "7": 0.9512,
+     "8": 1.0522,
+     "9": 0.8931,
+     "10": 0.976,
+     "11": 1.0865,
+     "12": 1.2051
+    },
+    "impressions": {
+     "1": 0.9982,
+     "2": 0.9778,
+     "3": 0.995,
+     "4": 0.9697,
+     "5": 0.9523,
+     "6": 1.0122,
+     "7": 0.8778,
+     "8": 1.0344,
+     "9": 1.059,
+     "10": 1.0195,
+     "11": 1.0452,
+     "12": 1.0589
+    }
+   },
+   "yoy": {
+    "window_prior": [
+     "2025-03-13",
+     "2025-08-08"
+    ],
+    "window_recent": [
+     "2026-03-13",
+     "2026-08-08"
+    ],
+    "days": 149,
+    "clicks": -0.04152,
+    "impressions": -0.02573,
+    "prior": {
+     "impressions": 3155793836,
+     "clicks": 21614543
+    },
+    "recent": {
+     "impressions": 3074585956,
+     "clicks": 20717002
+    }
+   }
+  }
+ },
+ "google_nonbrand": {
+  "label": "Google non-branded",
+  "note": "The scope the Botify lift actually acts on",
+  "days": 365,
+  "totals": {
+   "impressions": 2953187750,
+   "clicks": 45878716
+  },
+  "monthly": {
+   "1": {
+    "total": 4031999,
+    "days": 31
+   },
+   "2": {
+    "total": 3165178,
+    "days": 28
+   },
+   "3": {
+    "total": 3473741,
+    "days": 31
+   },
+   "4": {
+    "total": 3104383,
+    "days": 30
+   },
+   "5": {
+    "total": 3192462,
+    "days": 31
+   },
+   "6": {
+    "total": 2977709,
+    "days": 30
+   },
+   "7": {
+    "total": 3022670,
+    "days": 31
+   },
+   "8": {
+    "total": 4437102,
+    "days": 31
+   },
+   "9": {
+    "total": 4037272,
+    "days": 30
+   },
+   "10": {
+    "total": 4161668,
+    "days": 31
+   },
+   "11": {
+    "total": 5150316,
+    "days": 30
+   },
+   "12": {
+    "total": 5124216,
+    "days": 31
+   }
+  },
+  "monthlyByDate": {
+   "2025-08": {
+    "total": 4437102,
+    "days": 31
+   },
+   "2025-09": {
+    "total": 4037272,
+    "days": 30
+   },
+   "2025-10": {
+    "total": 4161668,
+    "days": 31
+   },
+   "2025-11": {
+    "total": 5150316,
+    "days": 30
+   },
+   "2025-12": {
+    "total": 5124216,
+    "days": 31
+   },
+   "2026-01": {
+    "total": 4031999,
+    "days": 31
+   },
+   "2026-02": {
+    "total": 3165178,
+    "days": 28
+   },
+   "2026-03": {
+    "total": 3473741,
+    "days": 31
+   },
+   "2026-04": {
+    "total": 3104383,
+    "days": 30
+   },
+   "2026-05": {
+    "total": 3192462,
+    "days": 31
+   },
+   "2026-06": {
+    "total": 2977709,
+    "days": 30
+   },
+   "2026-07": {
+    "total": 3022670,
+    "days": 31
+   }
+  },
+  "monthlyFull": {
+   "2024-11": {
+    "total": 6055432,
+    "days": 30
+   },
+   "2024-12": {
+    "total": 6071053,
+    "days": 31
+   },
+   "2025-01": {
+    "total": 3959814,
+    "days": 31
+   },
+   "2025-02": {
+    "total": 3276088,
+    "days": 28
+   },
+   "2025-03": {
+    "total": 3631088,
+    "days": 31
+   },
+   "2025-04": {
+    "total": 3422772,
+    "days": 30
+   },
+   "2025-05": {
+    "total": 3779703,
+    "days": 31
+   },
+   "2025-06": {
+    "total": 4110263,
+    "days": 30
+   },
+   "2025-07": {
+    "total": 4009781,
+    "days": 31
+   },
+   "2025-08": {
+    "total": 4437102,
+    "days": 31
+   },
+   "2025-09": {
+    "total": 4037272,
+    "days": 30
+   },
+   "2025-10": {
+    "total": 4161668,
+    "days": 31
+   },
+   "2025-11": {
+    "total": 5150316,
+    "days": 30
+   },
+   "2025-12": {
+    "total": 5124216,
+    "days": 31
+   },
+   "2026-01": {
+    "total": 4031999,
+    "days": 31
+   },
+   "2026-02": {
+    "total": 3165178,
+    "days": 28
+   },
+   "2026-03": {
+    "total": 3473741,
+    "days": 31
+   },
+   "2026-04": {
+    "total": 3104383,
+    "days": 30
+   },
+   "2026-05": {
+    "total": 3192462,
+    "days": 31
+   },
+   "2026-06": {
+    "total": 2977709,
+    "days": 30
+   },
+   "2026-07": {
+    "total": 3022670,
+    "days": 31
+   }
+  },
+  "seasonality": {
+   "clicks": {
+    "1": 1.0355,
+    "2": 0.8999,
+    "3": 0.8921,
+    "4": 0.8238,
+    "5": 0.8199,
+    "6": 0.7902,
+    "7": 0.7763,
+    "8": 1.1395,
+    "9": 1.0714,
+    "10": 1.0688,
+    "11": 1.3668,
+    "12": 1.316
+   },
+   "impressions": {
+    "1": 1.0548,
+    "2": 0.9369,
+    "3": 0.9603,
+    "4": 0.9108,
+    "5": 1.043,
+    "6": 0.8976,
+    "7": 0.8252,
+    "8": 0.9561,
+    "9": 0.8072,
+    "10": 1.0211,
+    "11": 1.3323,
+    "12": 1.2548
+   }
+  },
+  "yoy": {
+   "window_prior": [
+    "2024-10-15",
+    "2025-08-09"
+   ],
+   "window_recent": [
+    "2025-10-15",
+    "2026-08-09"
+   ],
+   "days": 299,
+   "clicks": -0.13529,
+   "impressions": -0.00328,
+   "prior": {
+    "impressions": 2478708623,
+    "clicks": 42217136
+   },
+   "recent": {
+    "impressions": 2470571300,
+    "clicks": 36505583
+   }
+  }
+ },
+ "combined_monthly_full": {
+  "2025-04": {
+   "total": 61393121,
+   "days": 30
+  },
+  "2025-05": {
+   "total": 68220535,
+   "days": 31
+  },
+  "2025-06": {
+   "total": 67782257,
+   "days": 30
+  },
+  "2025-07": {
+   "total": 71121536,
+   "days": 31
+  },
+  "2025-08": {
+   "total": 72692214,
+   "days": 31
+  },
+  "2025-09": {
+   "total": 65813792,
+   "days": 30
+  },
+  "2025-10": {
+   "total": 69707793,
+   "days": 31
+  },
+  "2025-11": {
+   "total": 69817221,
+   "days": 30
+  },
+  "2025-12": {
+   "total": 74080918,
+   "days": 31
+  },
+  "2026-01": {
+   "total": 63002104,
+   "days": 31
+  },
+  "2026-02": {
+   "total": 54787987,
+   "days": 28
+  },
+  "2026-03": {
+   "total": 59069603,
+   "days": 31
+  },
+  "2026-04": {
+   "total": 55802909,
+   "days": 30
+  },
+  "2026-05": {
+   "total": 58387876,
+   "days": 31
+  },
+  "2026-06": {
+   "total": 56901402,
+   "days": 30
+  },
+  "2026-07": {
+   "total": 57507978,
+   "days": 31
+  }
+ },
+ "combined_monthly_by_date": {
+  "2025-08": {
+   "total": 72692214,
+   "days": 31
+  },
+  "2025-09": {
+   "total": 65813792,
+   "days": 30
+  },
+  "2025-10": {
+   "total": 69707793,
+   "days": 31
+  },
+  "2025-11": {
+   "total": 69817221,
+   "days": 30
+  },
+  "2025-12": {
+   "total": 74080918,
+   "days": 31
+  },
+  "2026-01": {
+   "total": 63002104,
+   "days": 31
+  },
+  "2026-02": {
+   "total": 54787987,
+   "days": 28
+  },
+  "2026-03": {
+   "total": 59069603,
+   "days": 31
+  },
+  "2026-04": {
+   "total": 55802909,
+   "days": 30
+  },
+  "2026-05": {
+   "total": 58387876,
+   "days": 31
+  },
+  "2026-06": {
+   "total": 56901402,
+   "days": 30
+  },
+  "2026-07": {
+   "total": 57507978,
+   "days": 31
+  }
+ },
+ "combined": {
+  "label": "Google + Bing",
+  "note": "Sum of the two property totals over the same 365 days",
+  "totals": {
+   "impressions": 50546321632,
+   "clicks": 757571797
+  },
+  "monthly": {
+   "1": {
+    "total": 63002104,
+    "days": 31
+   },
+   "2": {
+    "total": 54787987,
+    "days": 28
+   },
+   "3": {
+    "total": 59069603,
+    "days": 31
+   },
+   "4": {
+    "total": 55802909,
+    "days": 30
+   },
+   "5": {
+    "total": 58387876,
+    "days": 31
+   },
+   "6": {
+    "total": 56901402,
+    "days": 30
+   },
+   "7": {
+    "total": 57507978,
+    "days": 31
+   },
+   "8": {
+    "total": 72692214,
+    "days": 31
+   },
+   "9": {
+    "total": 65813792,
+    "days": 30
+   },
+   "10": {
+    "total": 69707793,
+    "days": 31
+   },
+   "11": {
+    "total": 69817221,
+    "days": 30
+   },
+   "12": {
+    "total": 74080918,
+    "days": 31
+   }
+  },
+  "seasonality": {
+   "clicks": {
+    "1": 0.9797,
+    "2": 0.9432,
+    "3": 0.9185,
+    "4": 0.8966,
+    "5": 0.9079,
+    "6": 0.9143,
+    "7": 0.8942,
+    "8": 1.1303,
+    "9": 1.0575,
+    "10": 1.0839,
+    "11": 1.1218,
+    "12": 1.1519
+   }
+  },
+  "yoy": null
+ },
+ "ai": {
+  "weeks": [
+   {
+    "week": "FY27-W16",
+    "ends": "2026-05-23",
+    "same_session": {
+     "visits": 1000000,
+     "gmv": 7200000
+    },
+    "three_day": {
+     "visits": 1600000,
+     "gmv": 13100000,
+     "attested": true
+    },
+    "orders_3d": 130000,
+    "aov_reported": 101,
+    "cr_reported": 0.083,
+    "conversion": 0.075,
+    "visit_share_of_seo": 0.053,
+    "gmv_share_of_seo": 0.112,
+    "wow_visits": 0.09,
+    "wow_gmv": 0.09,
+    "note": "Record week, +9% WoW. Conversion fell 7.8%->7.5% over the prior month.",
+    "source": "Walmart Agentic Commerce Scorecard W16 FY27 (Jie Li), fwd Anthony Cantelmo 2026-05-28"
+   },
+   {
+    "week": "FY27-W17",
+    "ends": "2026-05-30",
+    "same_session": {
+     "visits": 800000,
+     "gmv": 6200000
+    },
+    "three_day": {
+     "visits": 1296000,
+     "gmv": 11135000,
+     "attested": false
+    },
+    "conversion": 0.075,
+    "visit_share_of_seo": 0.046,
+    "gmv_share_of_seo": 0.11,
+    "wow_visits": -0.19,
+    "wow_gmv": -0.15,
+    "note": "-19% visits, -15% GMV WoW. Decline continued into the following week. 3D pair derived from W16 3D x these deltas, not directly attested.",
+    "source": "Walmart Agentic Commerce Scorecard W17 FY27 (Jie Li), fwd Anthony Cantelmo 2026-06-04"
+   }
+  ],
+  "seo_reference": {
+   "weekly_visits": 30000000,
+   "weekly_gmv": 117300000,
+   "source": "Walmart SW ROI AI tab, cited to scorecard W16 3D attribution"
+  },
+  "caveats": [
+   "Two weekly readings. Not a baseline \u2014 a range with two points in it.",
+   "3D is the default basis: it is what Walmart's AEO channel reports on and what every other channel in the scorecard is measured against. Verified via AOV ($101), CR (8.3%) and the stated SEO shares. Same-session is carried as a floor.",
+   "Only W16's 3D pair is directly attested; W17's is derived from the email's stated WoW deltas applied to the W16 3D level.",
+   "Both weeks fall inside a window Walmart flagged volatile pending OpenAI feed indexation, completed 6/15/2026.",
+   "No AI seasonal history exists, so an AI trajectory carries NO seasonality. Borrowing retail seasonality would be an assumption dressed as data.",
+   "W16 was a record week (+9% WoW); W17 fell -19%. Annualising either alone is a run-rate on one point.",
+   "Walmart's SEO visit count (30M/wk) is ~2x our Google+Bing click archive. Different measurement systems; do not reconcile them. Use the SHARE ratios, which are internally consistent, for anything comparative."
+  ]
+ },
+ "caveats": [
+  "Baseline is property TOTAL; the Botify lift is non-branded only. State both.",
+  "Bing's year-over-year rests on 149 comparable days against Google's 299, and that span holds no holiday season.",
+  "Bing's Nov/Dec seasonal shape rests on a single holiday season."
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "snapshot_date": "2026-08-11",
+ "source": "Chris' BWT pull · walmart-global/rank_traffic.csv",
+ "scope": {"level": "property", "window": ["2025-08", "2026-07"]},
+ "totals": {"impressions": 7949954268, "clicks": 54161288},
+ "seasonality": {
+  "impressions": {"8": 1.0543, "9": 1.0446, "10": 1.0391, "11": 1.0309, "12": 1.0793, "1": 1.0174, "2": 0.9002, "3": 1.0141, "4": 0.9565, "5": 0.9706, "6": 0.9983, "7": 0.8947},
+  "clicks": {"8": 1.0717, "9": 0.8802, "10": 0.994, "11": 1.0709, "12": 1.2273, "1": 1.1521, "2": 0.8815, "3": 0.9667, "4": 0.9187, "5": 0.9263, "6": 0.9418, "7": 0.9688}
+ },
+ "caveats": ["Only one Sept–Dec in range — Nov/Dec indices are n=1.", "Non-branded must be derived as total − branded; top-100 covers ~24.7% of clicks.", "Position data exists only at weekly grain."]
+}
