@@ -1,0 +1,217 @@
+<title>Walmart Pilot Rebase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..800&display=swap">
+<style>
+/* ── tokens ──────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+  --page:#F4F6F9; --surface:#FFFFFF; --sunk:#EEF2F7; --sunk-2:#E4EAF2;
+  --ink:#14213A; --ink-2:#46536B; --muted:#7C879B; --rule:#DDE3EB; --rule-soft:#EAEEF3;
+  --wm:#1A6FD1; --wm-soft:rgba(26,111,209,.10); --wm-lo:#5FA3E8; --wm-mid:#1A6FD1; --wm-hi:#0B3F85;
+  --bt:#B85C1A; --bt-soft:rgba(184,92,26,.10); --bt-lo:#E0954F; --bt-mid:#B85C1A; --bt-hi:#7A3A0C;
+  --third:#5F3DC4; --spark:#FFC220; --spark-ink:#7A5A00;
+  --good:#0B7A3B; --warn:#9A6700; --bad:#B42318;
+  --ly:#98A4B8;
+  --shadow:0 1px 2px rgba(20,33,58,.06), 0 8px 24px -12px rgba(20,33,58,.18);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page:#0E131C; --surface:#151C28; --sunk:#1B2433; --sunk-2:#222D3E;
+    --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+    --wm:#3D8FE0; --wm-soft:rgba(61,143,224,.16); --wm-lo:#2C6FB3; --wm-mid:#5AA5EE; --wm-hi:#A9D2F8;
+    --bt:#C9782E; --bt-soft:rgba(201,120,46,.16); --bt-lo:#8A4512; --bt-mid:#C9782E; --bt-hi:#F0B27A;
+    --third:#8F7FE6; --spark:#FFC220; --spark-ink:#FFD866;
+    --good:#4CC377; --warn:#E0B341; --bad:#F0736A;
+    --ly:#6B778C;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:#0E131C; --surface:#151C28; --sunk:#1B2433; --sunk-2:#222D3E;
+  --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+  --wm:#3D8FE0; --wm-soft:rgba(61,143,224,.16); --wm-lo:#2C6FB3; --wm-mid:#5AA5EE; --wm-hi:#A9D2F8;
+  --bt:#C9782E; --bt-soft:rgba(201,120,46,.16); --bt-lo:#8A4512; --bt-mid:#C9782E; --bt-hi:#F0B27A;
+  --third:#8F7FE6; --spark:#FFC220; --spark-ink:#FFD866;
+  --good:#4CC377; --warn:#E0B341; --bad:#F0736A;
+  --ly:#6B778C;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+/* ── base ────────────────────────────────────────────────────────────────── */
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page); color:var(--ink);
+  font:15px/1.5 "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4 { margin:0; font-weight:700; letter-spacing:-.015em; text-wrap:balance; }
+p { margin:0; }
+a { color:inherit; }
+button { font:inherit; color:inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid var(--wm); outline-offset:2px; }
+.wrap { max-width:1180px; margin:0 auto; padding:0 28px; }
+@media (max-width:640px){ .wrap { padding:0 16px; } }
+.num, .tnum { font-variant-numeric: tabular-nums; }
+
+/* ── masthead ────────────────────────────────────────────────────────────── */
+.mast { padding:28px 0 0; border-bottom:1px solid var(--rule); background:var(--surface); }
+.mast-row { display:flex; justify-content:space-between; gap:18px 32px; align-items:flex-end; flex-wrap:wrap; }
+.kicker { font-size:11.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+h1 { font-size:clamp(1.55rem,3vw,2.15rem); line-height:1.08; }
+.lede { margin-top:10px; max-width:66ch; color:var(--ink-2); font-size:15px; }
+.ctlbar { display:flex; gap:12px 22px; flex-wrap:wrap; align-items:flex-end; padding:18px 0 0; }
+.ctl { display:grid; gap:6px; }
+.ctl .lbl { font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); }
+.seg { display:inline-flex; background:var(--sunk); border:1px solid var(--rule); border-radius:10px; padding:3px; gap:2px; }
+.seg button { border:0; background:transparent; color:var(--ink-2); padding:7px 13px; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+.seg button:hover { color:var(--ink); }
+.seg button[aria-pressed="true"] { background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(20,33,58,.12); }
+.seg.basis button[data-v="walmart"][aria-pressed="true"] { color:var(--wm); }
+.seg.basis button[data-v="botify"][aria-pressed="true"] { color:var(--bt); }
+.seg.basis button[aria-pressed="true"]::before { content:""; display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; background:currentColor; vertical-align:1px; }
+.seg.basis button[data-v="compare"][aria-pressed="true"]::before { background:linear-gradient(90deg,var(--wm) 50%,var(--bt) 50%); }
+.ctl input[type="date"], .ctl select { font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--rule); border-radius:8px; background:var(--surface); color:var(--ink); }
+.tabs { display:flex; gap:2px; margin-top:18px; overflow-x:auto; }
+.tab { border:0; border-bottom:2px solid transparent; background:transparent; padding:12px 16px 12px; color:var(--ink-2); font-weight:600; font-size:14px; cursor:pointer; white-space:nowrap; margin-bottom:-1px; }
+.tab:hover { color:var(--ink); }
+.tab[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--ink); }
+
+/* ── layout ──────────────────────────────────────────────────────────────── */
+main { padding:26px 0 60px; }
+.stack { display:grid; gap:22px; }
+section.fig { background:var(--surface); border:1px solid var(--rule); border-radius:14px; padding:22px 24px 22px; }
+section.fig.plain { background:transparent; border:0; padding:0; }
+.fig-head { display:flex; justify-content:space-between; gap:12px 24px; align-items:flex-start; flex-wrap:wrap; margin-bottom:14px; }
+.fig-head h2 { font-size:19px; }
+.fig-head h3 { font-size:16px; }
+.fig-head .sub { color:var(--ink-2); font-size:14px; max-width:78ch; margin-top:4px; }
+.fig-tools { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.note { color:var(--ink-2); font-size:13.5px; max-width:80ch; }
+.note strong { color:var(--ink); }
+.grid2 { display:grid; gap:22px; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
+.grid3 { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+
+/* ── stat tiles ──────────────────────────────────────────────────────────── */
+.tiles { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+.tile { position:relative; background:var(--surface); border:1px solid var(--rule); border-radius:14px; padding:18px 20px 16px; box-shadow:var(--shadow); }
+.tile.basis-walmart { border-top:3px solid var(--wm); }
+.tile.basis-botify { border-top:3px solid var(--bt); }
+.tile.basis-compare { border-top:3px solid transparent; border-image:linear-gradient(90deg,var(--wm) 50%,var(--bt) 50%) 1; border-left:1px solid var(--rule); border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+.tile .tl { font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); display:flex; justify-content:space-between; gap:8px; }
+.tile .tv { font-size:34px; font-weight:700; letter-spacing:-.03em; line-height:1.1; margin-top:8px; }
+.tile .tv small { font-size:15px; font-weight:600; color:var(--ink-2); letter-spacing:0; margin-left:6px; }
+.tile .td { margin-top:8px; color:var(--ink-2); font-size:13px; line-height:1.45; }
+.tile .pair { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+.tile .pair > div { padding:8px 10px; border-radius:9px; background:var(--sunk); }
+.tile .pair .k { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.tile .pair .v { font-size:20px; font-weight:700; letter-spacing:-.02em; margin-top:2px; }
+.tile .pair .s { font-size:12px; color:var(--ink-2); }
+.dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; vertical-align:1px; }
+.dot.wm { background:var(--wm); } .dot.bt { background:var(--bt); } .dot.ly { background:var(--ly); } .dot.third { background:var(--third); }
+.delta { font-weight:700; }
+.delta.up { color:var(--good); } .delta.down { color:var(--bad); } .delta.flat { color:var(--ink-2); }
+.chip { display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; letter-spacing:.04em; padding:3px 9px; border-radius:99px; border:1px solid var(--rule); color:var(--ink-2); background:var(--sunk); white-space:nowrap; }
+.chip.ok { color:var(--good); border-color:transparent; background:rgba(11,122,59,.10); }
+.chip.warn { color:var(--warn); border-color:transparent; background:rgba(154,103,0,.12); }
+.chip.bad { color:var(--bad); border-color:transparent; background:rgba(180,35,24,.10); }
+.chip.wm { color:var(--wm); background:var(--wm-soft); border-color:transparent; }
+.chip.bt { color:var(--bt); background:var(--bt-soft); border-color:transparent; }
+
+/* ── tables ──────────────────────────────────────────────────────────────── */
+.tscroll { overflow-x:auto; }
+table.t { width:100%; border-collapse:collapse; font-size:13.5px; }
+table.t th, table.t td { padding:9px 10px; border-bottom:1px solid var(--rule-soft); text-align:right; vertical-align:top; white-space:nowrap; }
+table.t th { font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--rule); }
+table.t th:first-child, table.t td:first-child { text-align:left; white-space:normal; }
+table.t td.l, table.t th.l { text-align:left; white-space:normal; }
+table.t td.nw { white-space:nowrap; }
+table.t tr.total td { font-weight:700; border-top:1px solid var(--rule); }
+table.t td.wm { color:var(--wm); font-weight:600; } table.t td.bt { color:var(--bt); font-weight:600; }
+table.t tr.muted td { color:var(--muted); }
+table.t.dense th, table.t.dense td { padding:6px 8px; font-size:12.5px; }
+
+/* ── charts ──────────────────────────────────────────────────────────────── */
+.chart { position:relative; }
+.chart svg { display:block; width:100%; height:auto; overflow:visible; }
+.chart .grid line { stroke:var(--rule-soft); stroke-width:1; }
+.chart .axis line { stroke:var(--rule); stroke-width:1; }
+.chart text { fill:var(--muted); font-size:11.5px; font-family:inherit; }
+.chart text.lbl { fill:var(--ink-2); font-size:11.5px; font-weight:600; }
+.chart .zero { stroke:var(--rule); stroke-width:1; }
+.chart .cross { stroke:var(--ink-2); stroke-width:1; opacity:0; }
+.chart .band { fill:var(--sunk-2); opacity:.55; }
+.chart .band-lbl { fill:var(--muted); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+.chart path.line { fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+.chart path.area { opacity:.10; }
+.chart .marker { stroke:var(--surface); stroke-width:2; }
+.chart .hit { fill:transparent; }
+.tip { position:absolute; pointer-events:none; z-index:5; background:var(--ink); color:var(--surface); font-size:12px; line-height:1.4; padding:8px 10px; border-radius:8px; box-shadow:0 6px 20px -8px rgba(0,0,0,.5); opacity:0; transform:translate(-50%,-100%); white-space:nowrap; transition:opacity .08s; }
+.tip .th { font-weight:700; margin-bottom:3px; }
+.tip .tr { display:flex; justify-content:space-between; gap:14px; }
+.tip .tr i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.legend { display:flex; gap:8px 18px; flex-wrap:wrap; margin-top:10px; font-size:12.5px; color:var(--ink-2); }
+.legend span { display:inline-flex; align-items:center; gap:7px; }
+.legend i { display:inline-block; width:18px; height:0; border-top:2px solid; border-radius:2px; }
+.legend i.dash { border-top-style:dashed; }
+.legend i.sq { width:12px; height:12px; border:0; border-radius:3px; }
+
+/* ── inputs panel ────────────────────────────────────────────────────────── */
+details.inputs { background:var(--surface); border:1px solid var(--rule); border-radius:14px; }
+details.inputs > summary { list-style:none; cursor:pointer; padding:16px 24px; display:flex; justify-content:space-between; align-items:center; gap:16px; font-weight:700; }
+details.inputs > summary::-webkit-details-marker { display:none; }
+details.inputs > summary .hint { font-weight:500; color:var(--ink-2); font-size:13.5px; }
+details.inputs > summary::after { content:"Open"; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+details.inputs[open] > summary::after { content:"Close"; }
+.inputs-body { padding:6px 24px 24px; display:grid; gap:22px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); border-top:1px solid var(--rule-soft); }
+.inputs-body h4 { font-size:13px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:16px 0 4px; display:flex; align-items:center; gap:8px; }
+.inputs-body h4::before { content:""; width:10px; height:10px; border-radius:50%; background:var(--muted); }
+.inputs-body .wmh h4::before { background:var(--wm); }
+.inputs-body .bth h4::before { background:var(--bt); }
+.field { display:grid; gap:6px; padding:10px 0; border-bottom:1px solid var(--rule-soft); }
+.field:last-child { border-bottom:0; }
+.field .fl { display:flex; justify-content:space-between; gap:10px; font-size:13.5px; font-weight:600; }
+.field .fl .val { color:var(--ink-2); font-weight:600; }
+.field .fh { font-size:12.5px; color:var(--muted); line-height:1.4; }
+.field select, .field input[type="number"] { font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--rule); border-radius:8px; background:var(--surface); color:var(--ink); max-width:100%; }
+.field input[type="range"] { width:100%; accent-color:var(--ink); }
+.field .row { display:flex; gap:10px; align-items:center; }
+.field .row input[type="number"] { width:90px; }
+.field label.chk { display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:600; cursor:pointer; }
+.field label.chk input { accent-color:var(--ink); width:16px; height:16px; }
+.qtag { display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--spark-ink); background:rgba(255,194,32,.22); padding:2px 7px; border-radius:6px; margin-left:8px; vertical-align:middle; }
+
+/* ── misc ────────────────────────────────────────────────────────────────── */
+.callout { border-left:3px solid var(--spark); background:var(--sunk); padding:14px 18px; border-radius:0 10px 10px 0; font-size:14px; color:var(--ink-2); }
+.callout strong { color:var(--ink); }
+.qlist { display:grid; gap:12px; }
+.q { background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:16px 18px; display:grid; grid-template-columns:auto 1fr; gap:4px 16px; }
+.q .qn { font-weight:800; color:var(--muted); font-size:13px; letter-spacing:.06em; padding-top:2px; }
+.q h4 { font-size:15px; }
+.q p { color:var(--ink-2); font-size:13.5px; margin-top:4px; }
+.q .qm { grid-column:2; font-size:12.5px; color:var(--muted); margin-top:6px; }
+.q .qm b { color:var(--ink-2); }
+footer { border-top:1px solid var(--rule); padding:22px 0 40px; color:var(--muted); font-size:12.5px; }
+footer .wrap { display:flex; justify-content:space-between; gap:12px 24px; flex-wrap:wrap; }
+.srcs { display:grid; gap:6px; font-size:12.5px; color:var(--ink-2); }
+.srcs b { color:var(--ink); font-weight:600; }
+@media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="mast-row">
+      <div>
+        <p class="kicker">Botify × Walmart US · SpeedWorkers pilot · rebuilt 8 Sep 2026</p>
+        <h1>Walmart pilot forecast, on Walmart's own ledger</h1>
+        <p class="lede">Frank's model, re-based on Walmart's internal SEO and AEO reporting (the DMP exports), side by side with the original GSC + Bing Webmaster Tools build. Same lift assumptions; different denominator, different dollars per visit, different trend.</p>
+      </div>
+      <div class="ctlbar" id="ctlbar"></div>
+    </div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+<footer><div class="wrap">
+  <span>Walmart DMP exports: SEO 9 Jul 2024 → 7 Sep 2026 · AEO 1 May 2026 → 7 Sep 2026. Botify archive: GSC US/web 15 Oct 2024 → 9 Aug 2026 · Bing 13 Mar 2025 → 8 Aug 2026.</span>
+  <span>Projections, not results. Nothing here is a Walmart-attested outcome.</span>
+</div></footer>
