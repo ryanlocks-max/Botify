@@ -149,6 +149,33 @@ function ledgerTable(D) {
   return `<div class="tscroll"><table class="t"><thead><tr><th class="l">Ledger</th><th class="l"><span class="dot wm"></span>Walmart reporting</th><th class="l"><span class="dot bt"></span>Botify GSC + BWT (Frank)</th></tr></thead>
     <tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="l num">${r[1]}</td><td class="l num">${r[2]}</td></tr>`).join('')}</tbody></table></div>`;
 }
+function baselineClauseFig(D) {
+  const W = D.wb, T = W.totals, tr = D.trendOpts;
+  const reads = [['Last 7 days', yoyWindow(WM.seo.visits, D.preLaunch, 7).change], ['Last 4 weeks', tr.t28.v], ['Last 13 weeks', tr.t91.v], ['Last 12 months', tr.ttm.v], ['August', yoyWindow(WM.seo.visits, '2026-08-31', 31).change], ['1–7 Sep (post-launch)', D.actuals ? D.actuals.yoy : null]];
+  const rows = W.rows.map(r => `<tr><td>${MON[r.m - 1]} ${r.y}${r.days < r.fullDays ? ` <span class="chip">${r.days}d</span>` : ''}</td><td class="num">${fmtC(r.proposed)}</td><td class="num">${fmtC(r.ly)}</td><td class="num">${dlt(r.impliedGrowth)}</td><td class="num">${fmtC(r.base)}</td><td class="num">${dlt(r.ly ? r.base / r.ly - 1 : null)}</td>${TIERS.map(t => `<td class="num"><span class="delta ${deltaCls(r.gapWith[t])}">${(r.gapWith[t] >= 0 ? '+' : '−') + fmtC(Math.abs(r.gapWith[t]))}</span></td>`).join('')}</tr>`).join('');
+  const xs = W.cum.low.map(p => p.n), ticks = xs.filter(n => { const d = new Date(n * DAY).getUTCDate(); return d === 1 || d === 15; });
+  const chart = lineChart({id: 'wb-cum', xs, xLabel: n => fmtDateS(isoOf(n)), xTicks: ticks, tipX: n => fmtDate(isoOf(n)), yFmt: fmtC, w: 560, h: 300,
+    series: TIERS.map(t => ({name: `With Botify · ${TIER_LABEL[t]}`, color: tierColor('walmart', t), ys: W.cum[t].map(p => p.v), endDot: true})).concat([{name: 'Without Botify', color: '--ly', ys: W.cum.low.map((p, i) => p.v - sum(D.wm.low.daily.slice(0, i + 1).map(q => q.inc))), dash: true}]),
+    aria: 'Cumulative visits above or below Walmart’s proposed baseline'});
+  return fig('Walmart’s proposed baseline, tested', `Walmart’s draft clause fixes four monthly visit figures and measures incremental visits as actual minus those figures, in its own analytics. The figures are last year’s months grown ${spct(T.impliedGrowth)}, which is August’s year-over-year almost to the decimal. Whether the pilot can show anything under this clause depends entirely on whether the underlying trend holds at that level: the incremental Botify adds is small next to the trend the baseline assumes.`,
+    `<div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:18px">
+      <div class="tile" style="box-shadow:none"><div class="tl">Clause total · ${W.rows.length} months</div><div class="tv num">${fmtC(T.proposed)}</div><div class="td num">${dlt(T.impliedGrowth)} on last year’s aligned ${fmtC(T.ly)}</div></div>
+      <div class="tile" style="box-shadow:none"><div class="tl">Without Botify at ${spct(D.trend)} trend</div><div class="tv num">${fmtC(T.base)}</div><div class="td num"><span class="delta ${deltaCls(T.gapWithout)}">${(T.gapWithout >= 0 ? '+' : '−') + fmtC(Math.abs(T.gapWithout))}</span> against the clause before any lift</div></div>
+      <div class="tile" style="box-shadow:none"><div class="tl">Measured incremental · low / mid / high</div><div class="tv num" style="font-size:24px">${TIERS.map(t => `<span class="delta ${deltaCls(T.gapWith[t])}">${(T.gapWith[t] >= 0 ? '+' : '−') + fmtC(Math.abs(T.gapWith[t]))}</span>`).join(' · ')}</div><div class="td num">Botify adds ${fmtC(T.inc.low)} – ${fmtC(T.inc.high)}; the clause reads actual minus baseline.</div></div>
+      <div class="tile" style="box-shadow:none"><div class="tl">Trend needed to break even</div><div class="tv num" style="font-size:24px">${TIERS.map(t => spct(T.breakeven[t])).join(' · ')}</div><div class="td num">low / mid / high. Below these, the clause reports negative incremental even with the lift delivered.</div></div>
+    </div>
+    <div class="grid2">
+      <div><h3 style="font-size:15px;margin-bottom:8px">Cumulative visits above (+) or below (−) the clause</h3>${chart}</div>
+      <div><h3 style="font-size:15px;margin-bottom:8px">What the record says the trend is</h3>
+        <div class="tscroll"><table class="t"><thead><tr><th class="l">Read, to ${fmtDateS(D.preLaunch)} unless stated</th><th>Visits YoY</th><th class="l">vs clause</th></tr></thead><tbody>
+        ${reads.map(([l, v]) => `<tr><td>${l}</td><td class="num">${dlt(v)}</td><td class="l num">${v == null ? '' : v >= T.impliedGrowth ? chip('ok', 'clears') : chip('bad', (((v - T.impliedGrowth) * 100).toFixed(1)) + ' pts short')}</td></tr>`).join('')}
+        </tbody></table></div>
+        <p class="note" style="margin-top:12px">The 364-day alignment is Walmart’s own. Eight of the last twelve months cleared ${spct(T.impliedGrowth)} with room to spare; May, June and July were negative; August cleared it by a whisker and the first September week sits just under it.</p></div>
+    </div>
+    <div class="tscroll" style="margin-top:18px"><table class="t"><thead><tr><th class="l">Month</th><th>Clause</th><th>Last year</th><th>Implied</th><th>Our baseline</th><th>Trend</th><th>Low vs clause</th><th>Mid vs clause</th><th>High vs clause</th></tr></thead><tbody>${rows}
+      <tr class="total"><td>Window</td><td class="num">${fmtC(T.proposed)}</td><td class="num">${fmtC(T.ly)}</td><td class="num">${dlt(T.impliedGrowth)}</td><td class="num">${fmtC(T.base)}</td><td class="num">${dlt(D.trend)}</td>${TIERS.map(t => `<td class="num"><span class="delta ${deltaCls(T.gapWith[t])}">${(T.gapWith[t] >= 0 ? '+' : '−') + fmtC(Math.abs(T.gapWith[t]))}</span></td>`).join('')}</tr></tbody></table></div>
+    <p class="note" style="margin-top:10px">December is pro-rated to the horizon by last year’s daily shape when the window closes on the 20th. Set the baseline trend control to “Walmart’s proposed baseline” to run the whole model on the clause’s assumption.</p>`);
+}
 function projectionFig(D) {
   const xs = D.wm.low.daily.map(p => p.n), xLabel = n => fmtDateS(isoOf(n));
   const ticks = xs.filter(n => { const d = new Date(n * DAY).getUTCDate(); return d === 1 || d === 15; });
@@ -209,12 +236,14 @@ function aeoFig(D) {
 }
 function actualsFig(D) {
   const A = D.actuals; if (!A) return '';
-  return fig(`First ${A.days} days since launch · Walmart export`, `The only post-launch read available: the Botify archive stops ${fmtDate(LAST_GSC)}. At day ${A.days} the low ramp has 2% adoption on one tranche, so the model expects nothing visible yet; this is a sanity check on the baseline, not a verdict on the pilot. Whether SpeedWorkers was actually serving in this window is not something the export can tell.`,
+  const G = A.gsc;
+  return fig(`First ${A.days} days since launch`, `Walmart’s export runs to ${fmtDate(A.to)}; the GSC pull (9 Sep, via the Botify MCP) runs to ${fmtDate(LAST_GSC)}. At day ${A.days} the low ramp has 2% adoption on one tranche, so the model expects nothing visible yet; this is a sanity check on the baseline, not a verdict on the pilot. Whether SpeedWorkers was actually serving in this window is not something either source can tell.`,
     `<div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
       <div class="tile" style="box-shadow:none"><div class="tl">SEO visits</div><div class="tv num">${fmtC(A.visits)}</div><div class="td num">${dlt(A.yoy)} vs same days last year · ${dlt(A.vsBase)} vs baseline</div></div>
       <div class="tile" style="box-shadow:none"><div class="tl">SEO GMV</div><div class="tv num">${fmtUSD(A.gmv)}</div><div class="td num">${dlt(A.gmvYoy)} YoY · ${fmtUSD2(A.gmv / A.visits)} per visit</div></div>
       <div class="tile" style="box-shadow:none"><div class="tl">Expected incremental so far</div><div class="tv num">${fmtC(A.expected.low)}<small>– ${fmtC(A.expected.high)}</small></div><div class="td num">visits, low to high · ${pct2(A.expected.high / A.visits)} of actual at most</div></div>
       <div class="tile" style="box-shadow:none"><div class="tl">AEO visits</div><div class="tv num">${fmtC(A.aeoV)}</div><div class="td num">${dlt(A.aeoBase ? A.aeoV / A.aeoBase - 1 : null)} vs the 28-day baseline run-rate · ${fmtUSD(A.aeoG)} GMV</div></div>
+      ${G ? `<div class="tile basis-botify" style="box-shadow:none"><div class="tl">GSC clicks · ${G.days} days</div><div class="tv num">${fmtC(G.clicks)}</div><div class="td num">${dlt(G.yoy)} YoY all buckets · non-branded ${dlt(G.nbYoy)}. Same days, Walmart’s SEO visits ${dlt(A.yoy)}.</div></div>` : ''}
     </div>`);
 }
 function field(label, help, control, q) { return `<div class="field"><div class="fl"><span>${label}${q ? `<span class="qtag">Q${q}</span>` : ''}</span></div>${control}${help ? `<div class="fh">${help}</div>` : ''}</div>`; }
@@ -255,6 +284,7 @@ function viewForecast(D) {
       : S.basis === 'walmart'
       ? `<strong>This is Frank’s lift on Walmart’s own numbers.</strong> Baseline is last year’s aligned window at ${spct(D.trend)}; each incremental visit is worth ${fmtUSD2(D.wm.mid.rpv)} (${esc(D.rpvOpt.label.toLowerCase())}). Switch to <em>Compare</em> to see what each of those choices does against the GSC build.`
       : `<strong>Frank’s model, unchanged.</strong> Reproduces his 13 Aug figures to the digit: ${fmtC(D.bt.low.incVisits)} / ${fmtC(D.bt.mid.incVisits)} / ${fmtC(D.bt.high.incVisits)} clicks to ${fmtDate(S.horizon)} at ${fmtUSD2(D.bt.low.rpv)} frozen RPV. Contract threshold 1.40M clicks, target 5.98M, stretch 13.65M by 20 Dec.`}</div>
+    ${baselineClauseFig(D)}
     ${fig('Two ledgers, one window', 'What each basis counts, and where every number comes from. Rows in this table are the differences; everything else is shared.', ledgerTable(D))}
     ${projectionFig(D)}
     ${pathFig(D)}
@@ -328,15 +358,15 @@ function viewDelta(D) {
     ['Frank’s trend window · 15 Oct → 9 Aug, this year vs last', fmtC(wmF.recent) + ' vs ' + fmtC(wmF.prior), dlt(wmF.change), fmtC(fw.recent.clicks) + ' vs ' + fmtC(fw.prior.clicks), dlt(fw.clicks)],
     ['Non-branded only (Frank’s lift scope)', '— no brand split in the export', '', fmtC(FD.trajectory.googleNonbrand.yoy.recent.clicks) + ' vs ' + fmtC(FD.trajectory.googleNonbrand.yoy.prior.clicks), dlt(FD.trajectory.googleNonbrand.yoy.clicks)],
     ['Measurement window last year · 1 Sep → 20 Dec 2025', fmtC(wmWin) + ' visits', '', fmtC(gscWin) + ' GSC + ' + fmtC(bingWin) + ' Bing clicks', (wmWin / (gscWin + bingWin)).toFixed(2) + '× visits per click'],
-    ['Weekly ratio, Oct 2024 → Aug 2026', '', '', '', 'range 1.95× – 3.39×, drifting up'],
+    ['Weekly ratio, Oct 2024 → ' + fmtDateS(LAST_GSC) + ' ' + LAST_GSC.slice(0, 4), '', '', '', (() => { const w = weeklySat({v: WM.seo.visits, c: GSC.total}, '2024-10-19', LAST_GSC).filter(x => x.days === 7 && x.c); const rs = w.map(x => x.v / x.c); return 'range ' + Math.min(...rs).toFixed(2) + '× – ' + Math.max(...rs).toFixed(2) + '×, drifting up'; })()],
   ];
   // AEO vs scorecard
   const wkA = weeklySat({v: WM.aeo.visits, g: WM.aeo.gmv, o: WM.aeo.orders}, P.aeo.start, LAST_WM).filter(w => w.days === 7);
   const scRows = FD.trajectory.ai.weeks.map(w => { const k = wkA.find(x => x.end === w.ends); return `<tr><td class="nw">${esc(w.week.replace('FY27-', ''))} · week to ${fmtDateS(w.ends)}</td><td class="num bt">${fmtC(w.three_day.visits)}${w.three_day.attested ? '' : '*'}</td><td class="num wm">${k ? fmtC(k.v) : '—'}</td><td class="num">${k ? dlt(k.v / w.three_day.visits - 1) : ''}</td><td class="num bt">${fmtUSD(w.three_day.gmv)}</td><td class="num wm">${k ? fmtUSD(k.g) : '—'}</td><td class="num">${k ? dlt(k.g / w.three_day.gmv - 1) : ''}</td><td class="num bt">${fmtUSD2(w.three_day.gmv / w.three_day.visits)}</td><td class="num wm">${k ? fmtUSD2(k.g / k.v) : '—'}</td></tr>`; }).join('');
   const last4 = wkA.slice(-4), l4v = sum(last4.map(w => w.v)) / 4, l4g = sum(last4.map(w => w.g)) / 4;
   return `<div class="stack">
-    <div class="callout"><strong>The two archives disagree on direction, not just level.</strong> On the 299 days Frank measured, Walmart’s SEO channel grew ${spct(wmF.change)} while GSC clicks fell ${spct(fw.clicks)}. Frank’s baseline therefore has Walmart’s organic <em>declining</em> into the pilot; Walmart’s own ledger has it roughly flat to up. The ratio between the two has drifted from about 2.1 visits per click in late 2024 to about 2.8 in 2026, which is the divergence expressed as a level.</div>
-    ${fig('Year over year by source', 'Monthly, 364-day aligned, full months only. GSC has a comparable prior year from November 2025; Bing from April 2026.', c1)}
+    <div class="callout"><strong>The two archives disagree on direction, not just level.</strong> On the 299 days Frank measured, Walmart’s SEO channel grew ${spct(wmF.change)} while GSC clicks fell ${spct(fw.clicks)}. Frank’s baseline therefore has Walmart’s organic <em>declining</em> into the pilot; Walmart’s own ledger has it roughly flat to up. The ratio between the two has drifted from about 2.1 visits per click in late 2024 to ${(() => { const r = rrows[rrows.length - 1]; return (r.wm / r.gsc).toFixed(1); })()} in ${(() => { const r = rrows[rrows.length - 1]; return MON[r.m - 1] + ' ' + r.y; })()}, which is the divergence expressed as a level. August 2026 is the widest month yet: GSC clicks ${dlt(yrows[yrows.length - 2] && yrows[yrows.length - 2].gsc)} against Walmart visits ${dlt(yrows[yrows.length - 2] && yrows[yrows.length - 2].wm)}.</div>
+    ${fig('Year over year by source', 'Monthly, 364-day aligned, full months only. GSC has a comparable prior year from November 2025 and now runs through August 2026 (pulled 9 Sep via the Botify MCP); Bing from April 2026 to July.', c1)}
     <div class="grid2">
       ${fig('Walmart SEO visits per GSC click', 'A stable measurement gap would be a flat line. This one climbs, which means Walmart’s SEO channel is counting something GSC increasingly is not.', c2)}
       ${fig('Indexed to April 2025 = 100', 'Levels stripped away, so the trajectories can be read against each other. Non-branded Google, the scope Botify’s lift acts on, is the weakest line.', c3)}
@@ -360,6 +390,7 @@ function viewDelta(D) {
 // ═══ Assumptions & questions tab ════════════════════════════════════════════
 function viewAssumptions(D) {
   const Q = [
+    ['Do we accept Walmart’s proposed baseline as drafted?', `Its four figures are last year’s months grown ${spct(D.wb.totals.impliedGrowth)}, which is August’s year-over-year. Only one of the last four months cleared that rate. Under the clause the pilot reports negative incremental unless the underlying trend holds at ${spct(D.wb.totals.breakeven.mid)} or better at mid; the clause also fixes December as a full month while the measurement closes on the 20th, and says nothing about AEO.`, 'Baseline trend → Walmart’s proposed baseline'],
     ['Is the 1 September launch real, and is SpeedWorkers serving?', 'Frank’s deployment snapshot on 13 Aug read “connected, no bot traffic routed yet”. The export shows 7 post-launch days at +2.9% YoY visits. If routing began later, the launch date control should move and those days are pre-launch baseline.', 'Launch date, top bar'],
     ['Which trend should the Walmart baseline carry?', `The export supports +9.5% (12 months), −3.9% (13 weeks) or +6.2% (4 weeks). Frank’s GSC trend is −10.8%. The default here is the 13-week read because it spans a full quarter and post-dates the May break. One point of trend is about ${fmtC(D.wm.mid.lyVisits * 0.01)} visits over the window, versus ${fmtC(D.wm.low.incVisits)} incremental at the low tier.`, 'Baseline trend'],
     ['What is a visit worth: Walmart’s current GMV per visit, or the contract’s frozen $3.19?', `The addendum freezes RPV at AOV $74.10 × CR 4.3%. Walmart’s export gives $3.21 for the year to July 2026, so the frozen figure was right when set, but the trailing quarter is ${fmtUSD2(D.rpvOpts.t91flat.flat)} and Nov/Dec run 15–20% above the annual mean. The default grows last year’s month by the 12-month RPV change.`, 'GMV per visit; AOV × CR'],
@@ -391,6 +422,7 @@ function viewAssumptions(D) {
     ${fig('Sources', '', `<div class="srcs">
       <div><b>DMP_SEO_9thJul24.xlsx</b> · Walmart internal reporting, marketing vehicle SEO, all divisions. Daily 9 Jul 2024 – 7 Sep 2026: Ty Net GMV, Auth Orders, PDP and PDP++ visits, with Ly columns 364 days back.</div>
       <div><b>AEO_1stMay26.xlsx</b> · Same report, marketing vehicle AEO. Daily 1 May – 7 Sep 2026. No prior-year columns (the vehicle is new).</div>
+      <div><b>GSC, live pull</b> · Botify MCP, project walmart0 / walmart-sw-demo, table search_console_by_property_flat, country usa, search type WEB, 1 Aug – 6 Sep 2026, bucketed as Frank did (keyword n/a = anonymized; branded flag). Matches his archive to the click on the overlapping days.</div>
       <div><b>Frank’s framework</b> · framework.html DATA block and data/archive/daily.csv (GSC US/web by bucket, 664 days; Bing property total, 514 days); STATE.md, HANDOFF-TO-RYAN.md, CORRECTION-MEMO.md, REVIEW.md, 13 Aug 2026. Parity with forecast.py checked on the headline: 1,843,988 / 7,291,533 / 16,325,245 clicks to 31 Dec; $6.78M / $57.82M.</div>
       <div><b>Walmart Agentic Commerce Scorecards</b> W16 and W17 FY27 (Jie Li), as recorded in Frank’s data; not re-read here.</div>
     </div>`)}

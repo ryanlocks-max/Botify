@@ -201,6 +201,18 @@ function visitsPerClick() {
 }
 const VPC = visitsPerClick();
 
+// Walmart's draft baseline clause: four monthly visit figures for Sep–Dec 2026,
+// "established by applying a year-over-year run-rate methodology". Incremental
+// visits under the clause = actual − these figures, measured in Walmart's system.
+const WB = P.walmartBaseline;
+const WB_MONTHS = ['2026-09', '2026-10', '2026-11', '2026-12'];
+function wbImplied() {
+  const proposed = sum(WB_MONTHS.map(k => WB[k]));
+  const ly = WM.seo.visits.sum(isoOf(dayNum('2026-09-01') - YOY), isoOf(dayNum('2026-12-31') - YOY));
+  return {proposed, ly, growth: ly ? proposed / ly - 1 : 0};
+}
+const WBI = wbImplied();
+
 // The trend applied to last year's aligned window. Every option is measured from
 // Walmart's own export; "gsc" borrows Frank's Google figure so the two bases can be
 // compared on one trend.
@@ -211,6 +223,7 @@ function wmTrendOptions(preLaunchISO) {
     t91:  {label: 'Trailing 13 weeks YoY',  v: yoyWindow(V, end, 91).change,  note: 'Visits, 91 days to ' + end + '. The most recent read that spans a full quarter.'},
     t28:  {label: 'Trailing 4 weeks YoY',   v: yoyWindow(V, end, 28).change,  note: 'Visits, 28 days to ' + end + '. Noisy; shown for the direction of travel.'},
     flat: {label: 'Held flat (0%)',         v: 0,                              note: 'Last year’s aligned window, unchanged.'},
+    walmart: {label: 'Walmart’s proposed baseline', v: WBI.growth,             note: 'The growth Walmart’s four monthly figures imply against last year’s aligned days (' + fmtC(WBI.proposed) + ' vs ' + fmtC(WBI.ly) + '). Matches August’s year-over-year almost exactly.'},
     gsc:  {label: "Frank's GSC trend",     v: FD.trajectory.engines.google.trend, note: 'Google Search Console clicks, −10.8% on 299 comparable days. Applied here only to show what the GSC trend does to Walmart’s base.'},
   };
 }
@@ -352,17 +365,49 @@ function derive() {
              aiBaseVisits: aeoBaseV, aiRpv: aeoRpv};
   }
 
-  // ── first week of actuals (Walmart only; the archive stops 9 Aug) ────────
+  // ── measured against Walmart's proposed baseline ─────────────────────────
+  // The clause is monthly, so December is pro-rated by last year's aligned share of
+  // the month falling inside the window when the horizon is the 20th.
+  const wb = {rows: [], totals: {}};
+  for (const key of WB_MONTHS) {
+    const y = +key.slice(0, 4), m = +key.slice(5, 7), a = dayNum(key + '-01'), b = a + dim(y, m) - 1;
+    const wa = Math.max(a, L), wz = Math.min(b, H); if (wz < wa) continue;
+    let lyFull = 0; for (let d = a; d <= b; d++) lyFull += WM.seo.visits.getN(d - YOY) || 0;
+    const row = {y, m, days: wz - wa + 1, fullDays: b - a + 1, proposedFull: WB[key], ly: 0, base: 0, with: {}, inc: {}};
+    TIERS.forEach(t => { row.with[t] = 0; row.inc[t] = 0; });
+    for (let d = wa; d <= wz; d++) {
+      const i = d - L; row.ly += wm.mid.daily[i].ly; row.base += wm.mid.daily[i].base;
+      TIERS.forEach(t => { row.inc[t] += wm[t].daily[i].inc; row.with[t] += wm[t].daily[i].base + wm[t].daily[i].inc; });
+    }
+    row.proposed = lyFull ? WB[key] * row.ly / lyFull : WB[key] * row.days / row.fullDays;
+    row.impliedGrowth = row.ly ? row.proposed / row.ly - 1 : null;
+    row.gapWithout = row.base - row.proposed;
+    row.gapWith = {}; TIERS.forEach(t => row.gapWith[t] = row.with[t] - row.proposed);
+    wb.rows.push(row);
+  }
+  const T = wb.totals; T.proposed = sum(wb.rows.map(r => r.proposed)); T.ly = sum(wb.rows.map(r => r.ly)); T.base = sum(wb.rows.map(r => r.base));
+  T.gapWithout = T.base - T.proposed; T.with = {}; T.gapWith = {}; T.inc = {};
+  TIERS.forEach(t => { T.with[t] = sum(wb.rows.map(r => r.with[t])); T.gapWith[t] = T.with[t] - T.proposed; T.inc[t] = sum(wb.rows.map(r => r.inc[t])); });
+  T.impliedGrowth = T.ly ? T.proposed / T.ly - 1 : null;
+  // Trend at which the with-Botify path exactly meets the clause, per tier.
+  T.breakeven = {}; TIERS.forEach(t => T.breakeven[t] = T.ly ? T.proposed / (T.ly + T.inc[t] / (1 + trend)) - 1 : null);
+  wb.implied = WBI;
+  // cumulative measured incremental (actual with Botify − clause), by day, per tier
+  wb.cum = {}; TIERS.forEach(t => { let c = 0; wb.cum[t] = wm[t].daily.map(p => { const key = yearOf(p.n) + '-' + String(monthOf(p.n)).padStart(2, '0'); const r = wb.rows.find(x => x.y === yearOf(p.n) && x.m === monthOf(p.n)); const share = r && r.ly ? p.ly / r.ly * r.proposed : 0; c += p.base + p.inc - share; return {n: p.n, v: c}; }); });
+
+  // ── first week of actuals (Walmart, plus GSC now that the pull runs to 6 Sep) ──
   const actTo = LAST_WM, actuals = dayNum(actTo) >= L ? (() => {
     const a = S.launch, b = actTo, v = WM.seo.visits.sum(a, b), g = WM.seo.gmv.sum(a, b), o = WM.seo.orders.sum(a, b);
     const lyv = WM.seo.visits.sum(isoOf(L - YOY), isoOf(dayNum(b) - YOY)), lyg = WM.seo.gmv.sum(isoOf(L - YOY), isoOf(dayNum(b) - YOY));
     const days = dayNum(b) - L + 1, base = lyv * (1 + trend);
     const expected = {}; TIERS.forEach(t => expected[t] = sum(wm[t].daily.slice(0, days).map(p => p.inc)));
     const aeoV = WM.aeo.visits.sum(a, b), aeoG = WM.aeo.gmv.sum(a, b), aeoBase = aeoB.dailyVisits * days;
-    return {from: a, to: b, days, visits: v, gmv: g, orders: o, lyVisits: lyv, lyGmv: lyg, base, vsBase: base ? v / base - 1 : null, yoy: lyv ? v / lyv - 1 : null, gmvYoy: lyg ? g / lyg - 1 : null, expected, aeoV, aeoG, aeoBase};
+    let gsc = null;
+    if (dayNum(LAST_GSC) >= L) { const gb = LAST_GSC, gv = GSC.total.sum(a, gb), gly = GSC.total.sum(isoOf(L - YOY), isoOf(dayNum(gb) - YOY)); gsc = {to: gb, days: dayNum(gb) - L + 1, clicks: gv, yoy: gly ? gv / gly - 1 : null, nonbrand: GSC.nonbrand.sum(a, gb), nbYoy: (() => { const p = GSC.nonbrand.sum(isoOf(L - YOY), isoOf(dayNum(gb) - YOY)); return p ? GSC.nonbrand.sum(a, gb) / p - 1 : null; })()}; }
+    return {from: a, to: b, days, visits: v, gmv: g, orders: o, lyVisits: lyv, lyGmv: lyg, base, vsBase: base ? v / base - 1 : null, yoy: lyv ? v / lyv - 1 : null, gmvYoy: lyg ? g / lyg - 1 : null, expected, aeoV, aeoG, aeoBase, gsc};
   })() : null;
 
-  return {cfg, trends, L, H, span, preLaunch, lyFrom, lyTo, bt, wm, trend, trendOpts, rpvOpts, rpvOpt, aeoB, aeoRpv, aeoRisk, aiF, ann, actuals, vpc: VPC};
+  return {cfg, trends, L, H, span, preLaunch, lyFrom, lyTo, bt, wm, wb, trend, trendOpts, rpvOpts, rpvOpt, aeoB, aeoRpv, aeoRisk, aiF, ann, actuals, vpc: VPC};
 }
 // Frank's monthlyFull gives Google+Bing property totals by calendar month back to
 // Nov 2024 (Google) / Apr 2025 (Bing); prorate them over last year's aligned window.
