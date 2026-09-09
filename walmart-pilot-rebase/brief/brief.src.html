@@ -8,16 +8,16 @@
   --ink:#14213A; --ink-2:#46536B; --muted:#7C879B; --rule:#DDE3EB; --rule-soft:#EAEEF3;
   --wm:#1A6FD1; --wm-lo:#5FA3E8; --wm-soft:rgba(26,111,209,.12);
   --bt:#B85C1A; --bt-lo:#E0954F;
-  --ly:#98A4B8; --good:#0B7A3B; --bad:#B42318; --warn:#9A6700;
+  --ly:#98A4B8; --third:#5F3DC4; --good:#0B7A3B; --bad:#B42318; --warn:#9A6700;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
   --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
-  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; } }
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --third:#8F7FE6; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; } }
 :root[data-theme="dark"] {
   color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
   --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
-  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; }
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --third:#8F7FE6; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; }
 
 * { box-sizing:border-box; }
 body { margin:0; background:var(--page); color:var(--ink); font:15px/1.5 "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased; }
@@ -34,12 +34,13 @@ h1 { font-size:30px; line-height:1.12; font-weight:700; }
 section { margin-top:34px; break-inside:avoid; }
 section h2 { font-size:19px; margin-bottom:6px; }
 section .sub { color:var(--ink-2); font-size:14px; max-width:76ch; margin-bottom:14px; }
-.tiles { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px; }
+.tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:18px; }
+.tile.th { border-top-color:var(--third); }
 @media (max-width:700px){ .tiles { grid-template-columns:1fr; } }
 .tile { border-top:3px solid var(--rule); padding:12px 0 0; }
 .tile.wm { border-top-color:var(--wm); } .tile.bt { border-top-color:var(--bt); }
 .tile .k { font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); }
-.tile .v { font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.1; margin-top:6px; }
+.tile .v { font-size:27px; font-weight:700; letter-spacing:-.03em; line-height:1.1; margin-top:6px; }
 .tile .v small { font-size:14px; font-weight:600; color:var(--ink-2); letter-spacing:0; margin-left:6px; }
 .tile .d { font-size:13px; color:var(--ink-2); margin-top:6px; line-height:1.45; }
 .chart { position:relative; }
@@ -66,11 +67,12 @@ table.t th { font-size:11px; font-weight:700; letter-spacing:.09em; text-transfo
 table.t th:first-child, table.t td:first-child { text-align:left; white-space:normal; min-width:200px; }
 table.t td.b, table.t th.b { text-align:left; white-space:normal; min-width:220px; }
 table.t tr.total td { font-weight:700; border-top:1px solid var(--rule); }
+table.t.wide { font-size:12.5px; } table.t.wide th, table.t.wide td { padding:6px 8px; } table.t.wide th:first-child, table.t.wide td:first-child { min-width:150px; } table.t.wide td.b, table.t.wide th.b { min-width:150px; } table.t.wide tr.total td { white-space:normal; }
 table.t tr.sub td { color:var(--ink-2); }
 .tscroll { overflow-x:auto; }
 .delta { font-weight:700; } .up { color:var(--good); } .down { color:var(--bad); } .flat { color:var(--ink-2); }
 .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; vertical-align:1px; }
-.dot.wm { background:var(--wm); } .dot.bt { background:var(--bt); } .dot.ly { background:var(--ly); }
+.dot.wm { background:var(--wm); } .dot.bt { background:var(--bt); } .dot.ly { background:var(--ly); } .dot.th { background:var(--third); }
 .takeaways { display:grid; gap:12px; }
 .take { display:grid; grid-template-columns:22px 1fr; gap:12px; font-size:14.5px; }
 .take .n { width:22px; height:22px; border-radius:50%; background:var(--ink); color:var(--surface); font-size:12px; font-weight:700; display:grid; place-items:center; margin-top:2px; }
@@ -148,24 +150,34 @@ const rat = B.ratio, xsR = rat.map((_, i) => i);
 const ratioChart = lineChart({id: 'ratio', xs: xsR, xLabel: i => ymL(rat[i].ym), xTicks: xsR.filter(i => i % 4 === 0), tipX: i => ymL(rat[i].ym), yFmt: v => v.toFixed(1) + '×', yZero: false, h: 260, w: 420,
   series: [{name: 'Visits per Google click', color: '--wm', ys: rat.map(r => r.gsc), dots: true, width: 2.5}, {name: 'Visits per Google + Bing click', color: '--wm-lo', ys: rat.map(r => r.gb), dash: true}], aria: 'Walmart visits per click in our archive'});
 // projections chart: months Sep–Dec
-const pm = PJ.months, xsP = pm.map((_, i) => i);
+const pm = PJ.months, xsP = pm.map((_, i) => i), WN = B.windows;
 const projChart = lineChart({id: 'proj', xs: xsP, xLabel: i => MON[pm[i].m - 1] + ' 2026', tipX: i => MON[pm[i].m - 1] + ' 2026', yFmt: fmtM, tipFmt: fmtM, yZero: false, h: 300,
   bands: [{lo: pm.map(r => r.wm_low), hi: pm.map(r => r.wm_high), color: '--wm'}],
   series: [{name: 'Last year, same weekdays', color: '--ly', ys: pm.map(r => r.ly), dash: true, dots: true},
            {name: 'Walmart’s proposed baseline (' + spct(tot.wb / tot.ly - 1) + ')', color: '--wm', ys: pm.map(r => r.wb), dots: true, width: 3},
-           {name: 'Our projection from Walmart’s data (' + spct(PJ.scen.wm_central) + ', shaded ' + spct(PJ.scen.wm_low) + ' to ' + spct(PJ.scen.wm_high) + ')', color: '--wm-lo', ys: pm.map(r => r.wm_central), dots: true},
-           {name: 'Our projection from Google + Bing trend (' + spct(PJ.scen.gb_trend) + ')', color: '--bt', ys: pm.map(r => r.gb_trend), dots: true}], aria: 'Four views of September to December visits'});
+           {name: 'Our recommended baseline, trend since 1 May (' + spct(PJ.scen.wm_central) + '); shaded ' + spct(PJ.scen.wm_low) + ' to ' + spct(PJ.scen.wm_high), color: '--wm-lo', ys: pm.map(r => r.wm_central), dots: true},
+           {name: 'Projection from Google + Bing trend (' + spct(PJ.scen.gb_trend) + ')', color: '--bt', ys: pm.map(r => r.gb_trend), dots: true}], aria: 'Four views of September to December visits'});
+// Walmart channel: visits vs GMV vs orders, YoY
+const revChart = lineChart({id: 'rev', xs: xsM, xLabel: i => ymL(mo[i].ym), tipX: i => ymL(mo[i].ym), yFmt: spct, h: 260,
+  series: [{name: 'SEO visits', color: '--wm', ys: mo.map(r => r.wm), dots: true, width: 2.5},
+           {name: 'SEO net GMV', color: '--third', ys: mo.map(r => r.gmvYoy), dots: true},
+           {name: 'SEO orders', color: '--wm-lo', ys: mo.map(r => r.ordYoy), dash: true}], aria: 'Walmart SEO channel: visits, GMV and orders year over year'});
+const fmtB = n => n == null ? '—' : '$' + (n / 1e9).toFixed(2) + 'B';
+const fmtUSDm = n => n == null ? '—' : '$' + (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + 'M';
+const SM = WN.sinceMay, Q2 = WN.fyq2;
+const row = (dot, label, v, gmvV, ordV, basis, cls) => `<tr class="${cls || ''}"><td>${dot ? `<span class="dot ${dot}"></span>` : ''}${label}</td><td class="num">${typeof v === 'string' ? v : fmtM(v)}</td><td class="num">${typeof v === 'string' ? '' : dlt(v / tot.ly - 1)}</td><td class="num">${typeof v === 'string' ? '' : (v === tot.wb ? '—' : dlt(v / tot.wb - 1))}</td><td class="num">${gmvV}</td><td class="num">${ordV}</td><td class="b">${basis}</td></tr>`;
 
 const sheet = `
 <div class="memo"><b>To</b><span>Botify executive team</span><b>From</b><span>Ryan Locks</span><b>Date</b><span>9 September 2026</span><b>Re</b><span>Walmart SEO pilot · the baseline Walmart proposed, what our data says, what theirs says</span></div>
-<h1>Walmart’s baseline assumes the good month holds. Our data and theirs both say that is the optimistic case.</h1>
-<p class="lede">Walmart wants incremental SEO visits in the SpeedWorkers pilot measured against a fixed baseline for September to December: <b>${fmtM(tot.wb)} visits</b>, which is last year grown <b>${spct(tot.wb / tot.ly - 1)}</b>. That growth rate is August’s year-over-year figure carried forward. Our Google + Bing data has Walmart’s search traffic falling about a fifth year over year. Walmart’s own visit data is flat to slightly up over the last quarter and has cleared ${spct(tot.wb / tot.ly - 1)} in only one of the last four months.</p>
+<h1>Walmart’s baseline assumes its best recent month holds. Both datasets say the channel is shrinking.</h1>
+<p class="lede">Walmart wants incremental SEO visits in the SpeedWorkers pilot measured against a fixed baseline for September to December: <b>${fmtM(tot.wb)} visits</b>, which is last year grown <b>${spct(tot.wb / tot.ly - 1)}</b>. That growth rate is August’s year-over-year figure carried forward. Since Walmart redefined its SEO channel on 1 May, its own visits are down <b>${spct(SM.visits)}</b> year over year; our Google + Bing data has clicks down about a fifth. Revenue is the opposite story: SEO net GMV is up <b>${spct(SM.gmv)}</b> on fewer visits, because each visit is worth ${spct(SM.rpv)} more than a year ago.</p>
 
 <section>
-  <h2>Three numbers</h2>
+  <h2>Four numbers</h2>
   <div class="tiles">
-    <div class="tile wm"><div class="k">Walmart’s baseline · Sep–Dec</div><div class="v num">${fmtM(tot.wb)}<small>visits</small></div><div class="d">${dlt(tot.wb / tot.ly - 1)} on last year’s ${fmtM(tot.ly)}. Four monthly figures, one growth rate, equal to August’s year-over-year.</div></div>
-    <div class="tile wm"><div class="k">Walmart’s own recent trend · visits</div><div class="v num">${spct(T.wm['91'])}<small>last 13 weeks</small></div><div class="d">${spct(T.wm['28'])} last 4 weeks · ${spct(T.wm['182'])} last 6 months · ${spct(T.wm['364'])} last 12 months. The trend decelerated sharply from April.</div></div>
+    <div class="tile wm"><div class="k">Walmart’s baseline · Sep–Dec</div><div class="v num">${fmtM(tot.wb)}<small>visits</small></div><div class="d">${dlt(tot.wb / tot.ly - 1)} on last year’s ${fmtM(tot.ly)}. One growth rate applied to four months, equal to August’s year-over-year.</div></div>
+    <div class="tile wm"><div class="k">Walmart’s visits · since 1 May</div><div class="v num">${spct(SM.visits)}<small>YoY</small></div><div class="d">${spct(Q2.visits)} over Walmart’s fiscal Q2 · ${spct(WN.w13.visits)} last 13 weeks · ${spct(WN.w4.visits)} last 4 weeks. Negative in three of the four months since the channel was redefined.</div></div>
+    <div class="tile th"><div class="k">Walmart’s SEO revenue · since 1 May</div><div class="v num">${spct(SM.gmv)}<small>net GMV</small></div><div class="d">Orders ${spct(SM.orders)} · GMV per visit ${spct(SM.rpv)} · conversion ${spct(SM.cr)}. Fewer visits, each worth more.</div></div>
     <div class="tile bt"><div class="k">Our data · Google + Bing clicks</div><div class="v num">${spct(T.gb['91'])}<small>last 13 weeks</small></div><div class="d">Google alone ${spct(T.gsc['91'])} for the quarter and ${spct(T.gsc_aug)} in August. Non-branded Google, where SpeedWorkers acts, is down about a third.</div></div>
   </div>
 </section>
@@ -175,6 +187,9 @@ const sheet = `
   <p class="sub">Year-over-year change by month, each month against the same weekdays a year earlier (Walmart’s own convention). Google Search Console and Bing Webmaster Tools count clicks on search results; Walmart’s analytics count site visits that reached a product page and are attributed to its SEO channel.</p>
   ${yoyChart}
   <p class="cap">From November 2025 to April 2026 Walmart reported double-digit growth while our archive showed declines of 7 to 11%. Both sources turned down in May 2026, the month Walmart began reporting a separate AI (“AEO”) channel. In August Walmart’s visits recovered to ${spct(T.wm_aug)}; Google clicks fell to ${spct(T.gsc_aug)}, the weakest month in the record.</p>
+  <h3 style="font-size:15px;margin:22px 0 6px">Inside Walmart’s SEO channel: visits, revenue and orders</h3>
+  ${revChart}
+  <p class="cap">Visits and dollars have decoupled. Since May the channel has delivered ${spct(SM.gmv)} more net GMV and ${spct(SM.orders)} more orders on ${spct(SM.visits)} visits, because conversion is up ${spct(SM.cr)} and GMV per visit is up ${spct(SM.rpv)}. Whatever is being counted as an SEO visit has become a better-qualified visit, which matters for how any incremental visit is valued.</p>
 </section>
 
 <section>
@@ -195,30 +210,34 @@ const sheet = `
 
 <section>
   <h2>September to December: four views of the same window</h2>
-  <p class="sub">All in Walmart visits, calendar months, so they can be read against Walmart’s clause. Our projections take last year’s aligned days and apply a measured trend; the shaded band is the range of trend readings in Walmart’s own data over the last quarter to the last month.</p>
+  <p class="sub">All in Walmart visits, calendar months, so they read against Walmart’s clause. Each projection applies a measured year-over-year trend to last year’s aligned days. Revenue and orders apply last year’s month at GMV per visit and conversion grown at the since-May rates (${spct(PJ.rpvGrowth)} and ${spct(PJ.crGrowth)}), the same window as the recommended trend.</p>
   ${projChart}
-  <div class="tscroll"><table class="t"><thead><tr><th>Sep–Dec 2026, visits</th><th>Total</th><th>vs last year</th><th>vs Walmart’s baseline</th><th class="b">Basis</th></tr></thead><tbody>
-    <tr><td><span class="dot ly"></span>Last year, same weekdays</td><td class="num">${fmtM(tot.ly)}</td><td class="num">—</td><td class="num">${dlt(tot.ly / tot.wb - 1)}</td><td class="b">Walmart export, Sep 2 – Dec 31 2025</td></tr>
-    <tr><td><span class="dot wm"></span>Walmart’s proposed baseline</td><td class="num"><b>${fmtM(tot.wb)}</b></td><td class="num">${dlt(tot.wb / tot.ly - 1)}</td><td class="num">—</td><td class="b">August’s year-over-year applied to every month</td></tr>
-    <tr><td><span class="dot wm"></span>Our projection from Walmart’s data · central</td><td class="num">${fmtM(tot.wm_central)}</td><td class="num">${dlt(PJ.scen.wm_central)}</td><td class="num">${dlt(tot.wm_central / tot.wb - 1)}</td><td class="b">Six-month trend in Walmart’s own visits</td></tr>
-    <tr class="sub"><td style="padding-left:26px">range: last 13 weeks to last 4 weeks</td><td class="num">${fmtM(tot.wm_low)} – ${fmtM(tot.wm_high)}</td><td class="num">${spct(PJ.scen.wm_low)} to ${spct(PJ.scen.wm_high)}</td><td class="num">${spct(tot.wm_low / tot.wb - 1)} to ${spct(tot.wm_high / tot.wb - 1)}</td><td class="b">Only the most recent four weeks clear the baseline</td></tr>
-    <tr><td><span class="dot bt"></span>Our projection from Google + Bing trend</td><td class="num">${fmtM(tot.gb_trend)}</td><td class="num">${dlt(PJ.scen.gb_trend)}</td><td class="num">${dlt(tot.gb_trend / tot.wb - 1)}</td><td class="b">13-week click trend applied to Walmart’s visit base</td></tr>
-    <tr class="sub"><td style="padding-left:26px">Frank’s August model, Google clicks −10.8%</td><td class="num">${fmtM(tot.frank_trend)}</td><td class="num">${spct(PJ.scen.frank_trend)}</td><td class="num">${spct(tot.frank_trend / tot.wb - 1)}</td><td class="b">The trend in our pilot forecast as delivered</td></tr>
-    <tr class="total"><td>SpeedWorkers lift on top of the central case</td><td class="num">+${fmtM(tot.inc_low)} / +${fmtM(tot.inc_mid)} / +${fmtM(tot.inc_high)}</td><td class="num">+0.7% / +2.7% / +6.1%</td><td class="num">${dlt((tot.wm_central + tot.inc_low) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_mid) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_high) / tot.wb - 1)}</td><td class="b">Low / mid / high, ramping from 1 Sep; ${fmtM(tot.inc20_low)} – ${fmtM(tot.inc20_high)} by the 20 Dec measurement close</td></tr>
+  <div class="tscroll"><table class="t wide"><thead><tr><th>Sep–Dec 2026</th><th>Visits</th><th>vs last year</th><th>vs Walmart’s baseline</th><th>Net GMV</th><th>Orders</th><th class="b">Basis</th></tr></thead><tbody>
+    ${row('ly', 'Last year, same weekdays', tot.ly, fmtB(tot.lyGmv), fmtM(tot.lyOrd), 'Walmart export, Sep 2 – Dec 31 2025; actual GMV and orders')}
+    ${row('wm', '<b>Walmart’s proposed baseline</b>', tot.wb, fmtB(tot.wbGmv), fmtM(tot.wbOrd), 'August’s year-over-year applied to every month; dollars at our projected GMV per visit')}
+    ${row('wm', '<b>Our recommended baseline</b> · trend since 1 May', tot.wm_central, fmtB(tot.wm_central_gmv), fmtM(tot.wm_central_ord), 'Walmart’s own visits since the channel was redefined on 1 May, four full months')}
+    ${row('', 'Fiscal Q2 only (3 May – 1 Aug)', tot.wm_low, fmtB(tot.wm_low_gmv), fmtM(tot.wm_low_ord), 'Walmart’s last completed fiscal quarter; excludes August', 'sub')}
+    ${row('', 'Last 13 weeks', tot.wm_alt, fmtB(tot.wm_alt_gmv), fmtM(tot.wm_alt_ord), 'A calendar quarter to 31 Aug; includes the August bounce', 'sub')}
+    ${row('', 'Last 4 weeks', tot.wm_high, fmtB(tot.wm_high_gmv), fmtM(tot.wm_high_ord), 'The only recent read that clears Walmart’s baseline', 'sub')}
+    ${row('bt', 'Projection from Google + Bing trend', tot.gb_trend, fmtB(tot.gb_trend_gmv), fmtM(tot.gb_trend_ord), '13-week click trend applied to Walmart’s visit base')}
+    ${row('', 'Frank’s August model, Google clicks −10.8%', tot.frank_trend, fmtB(tot.frank_trend_gmv), fmtM(tot.frank_trend_ord), 'The trend in our pilot forecast as delivered', 'sub')}
+    <tr class="total"><td>SpeedWorkers lift on the recommended baseline</td><td class="num">+${fmtM(tot.inc_low)} / +${fmtM(tot.inc_mid)} / +${fmtM(tot.inc_high)}</td><td class="num">+${(tot.inc_low / tot.wm_central * 100).toFixed(1)}% / +${(tot.inc_mid / tot.wm_central * 100).toFixed(1)}% / +${(tot.inc_high / tot.wm_central * 100).toFixed(1)}%</td><td class="num">${dlt((tot.wm_central + tot.inc_low) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_mid) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_high) / tot.wb - 1)}</td><td class="num">+${fmtUSDm(tot.incGmv_low)} / +${fmtUSDm(tot.incGmv_mid)} / +${fmtUSDm(tot.incGmv_high)}</td><td class="num">+${fmtM(tot.incOrd_low)} / +${fmtM(tot.incOrd_mid)} / +${fmtM(tot.incOrd_high)}</td><td class="b">Low / mid / high, ramping from 1 Sep; ${fmtM(tot.inc20_low)} – ${fmtM(tot.inc20_high)} visits by the 20 Dec measurement close</td></tr>
   </tbody></table></div>
+  <p class="cap">Every visit figure in this table converts to dollars at ${'$' + tot.rpv.toFixed(2)} per visit and ${(tot.cr * 100).toFixed(1)}% conversion on average across the window (last year: ${'$' + tot.rpvLY.toFixed(2)} and ${(tot.crLY * 100).toFixed(1)}%). At last year’s GMV per visit the dollar column would be about ${((1 - 1 / (1 + PJ.rpvGrowth)) * 100).toFixed(0)}% lower.</p>
 </section>
 
 <section>
   <h2>What this means</h2>
   <div class="takeaways">
-    <div class="take"><div class="n">1</div><div><b>The clause as drafted would report a failed pilot in most plausible scenarios.</b><p>At Walmart’s own six-month trend, the site lands ${fmtM(tot.wb - tot.wm_central)} visits under the baseline before SpeedWorkers adds anything. Our mid case adds ${fmtM(tot.inc_mid)}. Only the high case, on the most optimistic recent trend, shows as positive incremental.</p></div></div>
-    <div class="take"><div class="n">2</div><div><b>Our Google + Bing data cannot be the source of record, and should not set the baseline either.</b><p>It correlates with Walmart’s visits in shape but runs 20 points more negative on year-over-year and diverges further every month. A baseline from our data would be easy to beat and easy for Walmart to reject.</p></div></div>
-    <div class="take"><div class="n">3</div><div><b>Ask for a baseline built on a method, not a month.</b><p>A trailing 13-week or 6-month year-over-year read from Walmart’s own data, frozen at launch, gives ${fmtM(tot.wm_low)} – ${fmtM(tot.wm_central)}. Alternatively, a URL-level holdout removes the trend argument entirely, which is what Frank’s framework recommended.</p></div></div>
-    <div class="take"><div class="n">4</div><div><b>Two drafting gaps.</b><p>December is set as a full month while measurement closes on the 20th, and the AI (AEO) channel, where Walmart’s visits have doubled since June, is not mentioned.</p></div></div>
+    <div class="take"><div class="n">1</div><div><b>The clause as drafted would report a failed pilot in every scenario except the most optimistic.</b><p>On Walmart’s own trend since 1 May, the site lands ${fmtM(tot.wb - tot.wm_central)} visits under the baseline before SpeedWorkers adds anything. Our mid case adds ${fmtM(tot.inc_mid)}. Only the 4-week trend clears the baseline without us.</p></div></div>
+    <div class="take"><div class="n">2</div><div><b>Propose the trend since 1 May as the baseline: ${fmtM(tot.wm_central)} visits, ${spct(PJ.scen.wm_central)}.</b><p>It is Walmart’s own data, Walmart’s own year-over-year method, and four full months rather than one. The anchor is a fact Walmart cannot dispute: it redefined the SEO channel on 1 May when it carved out AEO, so earlier months measure a different thing. Fiscal Q2 (${spct(Q2.visits)}, ${fmtM(tot.wm_low)}) is the defensible floor; the 13-week read (${spct(WN.w13.visits)}, ${fmtM(tot.wm_alt)}) is the fallback if Walmart insists on including August.</p></div></div>
+    <div class="take"><div class="n">3</div><div><b>Our Google + Bing data cannot be the source of record, and should not set the baseline either.</b><p>It correlates with Walmart’s visits in shape but runs ${C.mean_gap_pts.toFixed(0)} points more negative on year-over-year and diverges further every month. A baseline from our data would be easy to beat and easy for Walmart to reject.</p></div></div>
+    <div class="take"><div class="n">4</div><div><b>Measure revenue alongside visits.</b><p>Walmart’s SEO channel is making ${spct(SM.gmv)} more money on ${spct(SM.visits)} visits. At ${'$' + tot.rpv.toFixed(2)} per visit, the mid case is worth about ${fmtUSDm(tot.incGmv_mid)} of net GMV and ${fmtM(tot.incOrd_mid)} orders over the window, against ${fmtUSDm(tot.inc_mid * 3.1863)} at the contract’s frozen $3.19. The frozen figure was right for last year and is low for this one.</p></div></div>
+    <div class="take"><div class="n">5</div><div><b>Two drafting gaps.</b><p>December is set as a full month while measurement closes on the 20th, and the AI (AEO) channel, where Walmart’s visits have doubled since June, is not mentioned.</p></div></div>
   </div>
 </section>
 
-<footer>Sources: Walmart DMP exports, SEO marketing vehicle (daily PDP++ visits, 9 Jul 2024 – 7 Sep 2026); Google Search Console, US web, walmart.com domain property via the Botify platform (15 Oct 2024 – 6 Sep 2026); Bing Webmaster Tools property totals (13 Mar 2025 – 8 Aug 2026); Walmart draft baseline clause received 9 Sep 2026. Year-over-year uses 364-day alignment throughout. SpeedWorkers lift uses the tiers in Frank’s 13 Aug model, expressed as a share of the traffic base and ramped over three tranches. Full interactive model: Walmart Pilot Rebase artifact.</footer>`;
+<footer>Sources: Walmart DMP exports, SEO marketing vehicle (daily PDP++ visits, net GMV and authorized orders, 9 Jul 2024 – 7 Sep 2026); Google Search Console, US web, walmart.com domain property via the Botify platform (15 Oct 2024 – 6 Sep 2026); Bing Webmaster Tools property totals (13 Mar 2025 – 8 Aug 2026); Walmart draft baseline clause received 9 Sep 2026. Year-over-year uses 364-day alignment throughout. Projections apply a trend to last year’s aligned days; revenue applies last year’s monthly GMV per visit and conversion grown at the since-May rates. SpeedWorkers lift uses the tiers in Frank’s 13 Aug model, expressed as a share of the traffic base and ramped over three tranches. Full interactive model: Walmart Pilot Rebase artifact.</footer>`;
 document.getElementById('sheet').innerHTML = sheet;
 wire(document.getElementById('sheet'));
 </script>

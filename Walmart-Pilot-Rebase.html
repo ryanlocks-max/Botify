@@ -442,6 +442,8 @@ function wmTrendOptions(preLaunchISO) {
     t91:  {label: 'Trailing 13 weeks YoY',  v: yoyWindow(V, end, 91).change,  note: 'Visits, 91 days to ' + end + '. The most recent read that spans a full quarter.'},
     t28:  {label: 'Trailing 4 weeks YoY',   v: yoyWindow(V, end, 28).change,  note: 'Visits, 28 days to ' + end + '. Noisy; shown for the direction of travel.'},
     flat: {label: 'Held flat (0%)',         v: 0,                              note: 'Last year’s aligned window, unchanged.'},
+    sinceMay: {label: 'Since 1 May (channel redefined)', v: (() => { const w = yoyWindow(V, end, dayNum(end) - dayNum('2026-05-01') + 1); return w.change; })(), note: 'Visits from 1 May, when Walmart carved the AEO vehicle out of SEO, to ' + end + '. The recommended baseline trend in the executive brief: Walmart’s own data and method, four full months, anchored to a definitional change.'},
+    fyq2: {label: 'Walmart fiscal Q2 (3 May – 1 Aug)', v: (() => { const w = yoyWindow(V, '2026-08-01', 91); return w.change; })(), note: 'Walmart’s last completed fiscal quarter. Excludes August; the defensible floor.'},
     walmart: {label: 'Walmart’s proposed baseline', v: WBI.growth,             note: 'The growth Walmart’s four monthly figures imply against last year’s aligned days (' + fmtC(WBI.proposed) + ' vs ' + fmtC(WBI.ly) + '). Matches August’s year-over-year almost exactly.'},
     gsc:  {label: "Frank's GSC trend",     v: FD.trajectory.engines.google.trend, note: 'Google Search Console clicks, −10.8% on 299 comparable days. Applied here only to show what the GSC trend does to Walmart’s base.'},
   };
