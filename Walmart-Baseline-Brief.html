@@ -1,0 +1,224 @@
+<title>Walmart Baseline Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..800&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --page:#F4F6F9; --surface:#FFFFFF; --sunk:#EEF2F7;
+  --ink:#14213A; --ink-2:#46536B; --muted:#7C879B; --rule:#DDE3EB; --rule-soft:#EAEEF3;
+  --wm:#1A6FD1; --wm-lo:#5FA3E8; --wm-soft:rgba(26,111,209,.12);
+  --bt:#B85C1A; --bt-lo:#E0954F;
+  --ly:#98A4B8; --good:#0B7A3B; --bad:#B42318; --warn:#9A6700;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
+  --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; } }
+:root[data-theme="dark"] {
+  color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
+  --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; }
+
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font:15px/1.5 "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased; }
+h1,h2,h3 { margin:0; letter-spacing:-.015em; text-wrap:balance; }
+p { margin:0; }
+.num { font-variant-numeric:tabular-nums; }
+.sheet { max-width:920px; margin:28px auto 60px; background:var(--surface); border:1px solid var(--rule); border-radius:6px; padding:44px 52px 40px; }
+@media (max-width:700px){ .sheet { margin:0; border:0; border-radius:0; padding:28px 18px; } }
+.memo { display:grid; grid-template-columns:auto 1fr; gap:4px 18px; font-size:12.5px; color:var(--ink-2); margin-bottom:26px; padding-bottom:16px; border-bottom:1px solid var(--rule); }
+.memo b { font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:11px; color:var(--muted); padding-top:2px; }
+h1 { font-size:30px; line-height:1.12; font-weight:700; }
+.lede { margin-top:12px; font-size:16px; color:var(--ink-2); max-width:70ch; }
+.lede b { color:var(--ink); }
+section { margin-top:34px; break-inside:avoid; }
+section h2 { font-size:19px; margin-bottom:6px; }
+section .sub { color:var(--ink-2); font-size:14px; max-width:76ch; margin-bottom:14px; }
+.tiles { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px; }
+@media (max-width:700px){ .tiles { grid-template-columns:1fr; } }
+.tile { border-top:3px solid var(--rule); padding:12px 0 0; }
+.tile.wm { border-top-color:var(--wm); } .tile.bt { border-top-color:var(--bt); }
+.tile .k { font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); }
+.tile .v { font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.1; margin-top:6px; }
+.tile .v small { font-size:14px; font-weight:600; color:var(--ink-2); letter-spacing:0; margin-left:6px; }
+.tile .d { font-size:13px; color:var(--ink-2); margin-top:6px; line-height:1.45; }
+.chart { position:relative; }
+.chart svg { display:block; width:100%; height:auto; overflow:visible; }
+.chart .grid line { stroke:var(--rule-soft); stroke-width:1; }
+.chart text { fill:var(--muted); font-size:11.5px; font-family:inherit; }
+.chart text.lbl { fill:var(--ink-2); font-size:11.5px; font-weight:600; }
+.chart .zero { stroke:var(--rule); stroke-width:1; }
+.chart .cross { stroke:var(--ink-2); stroke-width:1; opacity:0; }
+.chart path.line { fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+.chart path.area { opacity:.12; }
+.chart .marker { stroke:var(--surface); stroke-width:2; }
+.chart .hit { fill:transparent; }
+.tip { position:absolute; pointer-events:none; z-index:5; background:var(--ink); color:var(--surface); font-size:12px; line-height:1.4; padding:8px 10px; border-radius:6px; opacity:0; transform:translate(-50%,-100%); white-space:nowrap; transition:opacity .08s; }
+.tip .th { font-weight:700; margin-bottom:3px; } .tip .tr { display:flex; justify-content:space-between; gap:14px; } .tip .tr i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.legend { display:flex; gap:8px 18px; flex-wrap:wrap; margin-top:8px; font-size:12.5px; color:var(--ink-2); }
+.legend span { display:inline-flex; align-items:center; gap:7px; } .legend i { display:inline-block; width:18px; height:0; border-top:2px solid; } .legend i.dash { border-top-style:dashed; } .legend i.sq { width:12px; height:12px; border:0; border-radius:2px; }
+.cap { font-size:13px; color:var(--ink-2); margin-top:10px; max-width:76ch; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+@media (max-width:700px){ .two { grid-template-columns:1fr; } }
+table.t { width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px; }
+table.t th, table.t td { padding:8px 10px; border-bottom:1px solid var(--rule-soft); text-align:right; white-space:nowrap; vertical-align:top; }
+table.t th { font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--rule); }
+table.t th:first-child, table.t td:first-child { text-align:left; white-space:normal; min-width:200px; }
+table.t td.b, table.t th.b { text-align:left; white-space:normal; min-width:220px; }
+table.t tr.total td { font-weight:700; border-top:1px solid var(--rule); }
+table.t tr.sub td { color:var(--ink-2); }
+.tscroll { overflow-x:auto; }
+.delta { font-weight:700; } .up { color:var(--good); } .down { color:var(--bad); } .flat { color:var(--ink-2); }
+.dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; vertical-align:1px; }
+.dot.wm { background:var(--wm); } .dot.bt { background:var(--bt); } .dot.ly { background:var(--ly); }
+.takeaways { display:grid; gap:12px; }
+.take { display:grid; grid-template-columns:22px 1fr; gap:12px; font-size:14.5px; }
+.take .n { width:22px; height:22px; border-radius:50%; background:var(--ink); color:var(--surface); font-size:12px; font-weight:700; display:grid; place-items:center; margin-top:2px; }
+.take b { color:var(--ink); }
+.take p { color:var(--ink-2); }
+footer { margin-top:34px; padding-top:14px; border-top:1px solid var(--rule); font-size:12px; color:var(--muted); line-height:1.55; }
+@media print {
+  body { background:#fff; } .sheet { margin:0; border:0; padding:0; max-width:none; }
+  section { break-inside:avoid; } .tip { display:none; }
+}
+</style>
+
+<div class="sheet" id="sheet"></div>
+
+<script>
+const B = {"generated":"2026-09-09","monthly":[{"ym":"2025-09","wm":0.24113567328611363,"gsc":null,"gb":null,"wmLevel":141490412.5,"gscLevel":61840965.0,"gbLevel":65813792.0},{"ym":"2025-10","wm":0.1568978950855422,"gsc":null,"gb":null,"wmLevel":154062082.0,"gscLevel":65221322.0,"gbLevel":69707793.0},{"ym":"2025-11","wm":0.11463087878597644,"gsc":-0.10901146917549309,"gb":null,"wmLevel":167352993.0,"gscLevel":64983991.0,"gbLevel":69817221.0},{"ym":"2025-12","wm":0.23575102151379745,"gsc":-0.10547398502888106,"gb":null,"wmLevel":199563836.0,"gscLevel":68541503.0,"gbLevel":74080918.0},{"ym":"2026-01","wm":0.2160046295632061,"gsc":-0.07180798396549837,"gb":null,"wmLevel":150861839.0,"gscLevel":57801966.0,"gbLevel":63002104.0},{"ym":"2026-02","wm":0.205432486669608,"gsc":-0.015187827610890103,"gb":null,"wmLevel":135297453.0,"gscLevel":50809441.0,"gbLevel":54787987.0},{"ym":"2026-03","wm":0.21515251013147707,"gsc":-0.058614901440443457,"gb":null,"wmLevel":163770403.0,"gscLevel":54706459.0,"gbLevel":59069603.0},{"ym":"2026-04","wm":0.13787595060452484,"gsc":-0.10038415564510472,"gb":-0.09268184760603981,"wmLevel":150318521.0,"gscLevel":51656370.0,"gbLevel":55802909.0},{"ym":"2026-05","wm":-0.1012427635251334,"gsc":-0.15038883816434823,"gb":-0.14542043953215456,"wmLevel":133334853.0,"gscLevel":54206995.0,"gbLevel":58387876.0},{"ym":"2026-06","wm":-0.07934657110875465,"gsc":-0.16714932959849305,"gb":-0.1623805059980321,"wmLevel":138015092.0,"gscLevel":52650604.0,"gbLevel":56901402.0},{"ym":"2026-07","wm":-0.09244256468749168,"gsc":-0.19746351119095062,"gb":-0.1903830568851571,"wmLevel":148078879.0,"gscLevel":53135522.0,"gbLevel":57507978.0},{"ym":"2026-08","wm":0.04788361103154992,"gsc":-0.23505002664608454,"gb":null,"wmLevel":170594623.0,"gscLevel":51988357.0,"gbLevel":null}],"weekly":[{"end":"2024-10-26","wm":30495087.0,"gsc":14860869.0,"gb":null},{"end":"2024-11-02","wm":32224882.0,"gsc":15089293.0,"gb":null},{"end":"2024-11-09","wm":31025095.0,"gsc":14670360.0,"gb":null},{"end":"2024-11-16","wm":33786840.0,"gsc":15709424.0,"gb":null},{"end":"2024-11-23","wm":33635175.0,"gsc":17152144.0,"gb":null},{"end":"2024-11-30","wm":41281081.0,"gsc":20392490.0,"gb":null},{"end":"2024-12-07","wm":40455339.0,"gsc":18971913.0,"gb":null},{"end":"2024-12-14","wm":38770666.0,"gsc":18027427.0,"gb":null},{"end":"2024-12-21","wm":39242636.0,"gsc":17955641.0,"gb":null},{"end":"2024-12-28","wm":32178550.0,"gsc":15875911.0,"gb":null},{"end":"2025-01-04","wm":30481688.0,"gsc":15380501.0,"gb":null},{"end":"2025-01-11","wm":28784010.0,"gsc":14350469.0,"gb":null},{"end":"2025-01-18","wm":28094859.0,"gsc":14088074.0,"gb":null},{"end":"2025-01-25","wm":26817237.0,"gsc":13724359.0,"gb":null},{"end":"2025-02-01","wm":26793896.0,"gsc":13426226.0,"gb":null},{"end":"2025-02-08","wm":26986091.0,"gsc":13266362.0,"gb":null},{"end":"2025-02-15","wm":26597774.0,"gsc":12793440.0,"gb":null},{"end":"2025-02-22","wm":29376710.0,"gsc":12813342.0,"gb":null},{"end":"2025-03-01","wm":29279185.0,"gsc":12719883.0,"gb":null},{"end":"2025-03-08","wm":29993366.0,"gsc":12779848.0,"gb":null},{"end":"2025-03-15","wm":32986037.0,"gsc":12944333.0,"gb":null},{"end":"2025-03-22","wm":30786182.0,"gsc":13176712.0,"gb":13998767.0},{"end":"2025-03-29","wm":28742010.0,"gsc":13307806.0,"gb":14144001.0},{"end":"2025-04-05","wm":29339124.0,"gsc":13541301.0,"gb":14418402.0},{"end":"2025-04-12","wm":29910324.0,"gsc":13252010.0,"gb":14184119.0},{"end":"2025-04-19","wm":31815917.0,"gsc":13435894.0,"gb":14386226.0},{"end":"2025-04-26","wm":30479169.0,"gsc":13374139.0,"gb":14326141.0},{"end":"2025-05-03","wm":33156125.0,"gsc":13797279.0,"gb":14789838.0},{"end":"2025-05-10","wm":34009387.0,"gsc":14240827.0,"gb":15250544.0},{"end":"2025-05-17","wm":32363812.0,"gsc":14074177.0,"gb":15084988.0},{"end":"2025-05-24","wm":33160379.0,"gsc":14344515.0,"gb":15387876.0},{"end":"2025-05-31","wm":33760890.0,"gsc":14915912.0,"gb":15977548.0},{"end":"2025-06-07","wm":35762850.0,"gsc":15071665.0,"gb":16117259.0},{"end":"2025-06-14","wm":35207721.0,"gsc":14531488.0,"gb":15623142.0},{"end":"2025-06-21","wm":33554875.0,"gsc":14279198.0,"gb":15417113.0},{"end":"2025-06-28","wm":34439538.0,"gsc":14757763.0,"gb":15867319.0},{"end":"2025-07-05","wm":38092438.0,"gsc":15404647.0,"gb":16443674.0},{"end":"2025-07-12","wm":38564355.0,"gsc":15084594.0,"gb":16185634.0},{"end":"2025-07-19","wm":35560050.0,"gsc":14499160.0,"gb":15568555.0},{"end":"2025-07-26","wm":36046740.0,"gsc":14800270.0,"gb":15884773.0},{"end":"2025-08-02","wm":35818688.0,"gsc":15322009.0,"gb":16446048.0},{"end":"2025-08-09","wm":37333253.0,"gsc":15384253.0,"gb":16507135.0},{"end":"2025-08-16","wm":37046144.0,"gsc":15491521.0,"gb":16624784.0},{"end":"2025-08-23","wm":37645270.0,"gsc":15514003.0,"gb":16633994.0},{"end":"2025-08-30","wm":35639095.0,"gsc":14965133.0,"gb":16017580.0},{"end":"2025-09-06","wm":34822978.0,"gsc":14788914.0,"gb":15735697.0},{"end":"2025-09-13","wm":33419756.5,"gsc":14175216.0,"gb":15108501.0},{"end":"2025-09-20","wm":31898657.0,"gsc":14221589.0,"gb":15115452.0},{"end":"2025-09-27","wm":32497716.0,"gsc":14501556.0,"gb":15412565.0},{"end":"2025-10-04","wm":32522270.0,"gsc":14589897.0,"gb":15544973.0},{"end":"2025-10-11","wm":35158852.0,"gsc":14512096.0,"gb":15464507.0},{"end":"2025-10-18","wm":34380145.0,"gsc":14346508.0,"gb":15329921.0},{"end":"2025-10-25","wm":34908260.0,"gsc":14735228.0,"gb":15793495.0},{"end":"2025-11-01","wm":35668100.0,"gsc":15295871.0,"gb":16365648.0},{"end":"2025-11-08","wm":34997108.0,"gsc":13763168.0,"gb":14850084.0},{"end":"2025-11-15","wm":36665206.0,"gsc":14330572.0,"gb":15463744.0},{"end":"2025-11-22","wm":39046814.0,"gsc":14976498.0,"gb":16160120.0},{"end":"2025-11-29","wm":44585611.0,"gsc":17216166.0,"gb":18360306.0},{"end":"2025-12-06","wm":47382004.0,"gsc":16952231.0,"gb":18248703.0},{"end":"2025-12-13","wm":48506030.0,"gsc":15501891.0,"gb":16827034.0},{"end":"2025-12-20","wm":48751296.0,"gsc":15644675.0,"gb":16917797.0},{"end":"2025-12-27","wm":40557915.0,"gsc":14789838.0,"gb":15868625.0},{"end":"2026-01-03","wm":37058956.0,"gsc":14599080.0,"gb":15814456.0},{"end":"2026-01-10","wm":34666508.0,"gsc":13012912.0,"gb":14215433.0},{"end":"2026-01-17","wm":33637476.0,"gsc":12553123.0,"gb":13792652.0},{"end":"2026-01-24","wm":34696064.0,"gsc":13383324.0,"gb":14571301.0},{"end":"2026-01-31","wm":32184932.0,"gsc":12642085.0,"gb":13719811.0},{"end":"2026-02-07","wm":36068316.0,"gsc":13587216.0,"gb":14712442.0},{"end":"2026-02-14","wm":33469754.0,"gsc":12550360.0,"gb":13514974.0},{"end":"2026-02-21","wm":31765955.0,"gsc":12181768.0,"gb":13090728.0},{"end":"2026-02-28","wm":33993428.0,"gsc":12490097.0,"gb":13469843.0},{"end":"2026-03-07","wm":34357115.0,"gsc":12604680.0,"gb":13601910.0},{"end":"2026-03-14","wm":33032345.0,"gsc":12346407.0,"gb":13325883.0},{"end":"2026-03-21","wm":39545668.0,"gsc":12170949.0,"gb":13166899.0},{"end":"2026-03-28","wm":39484393.0,"gsc":12271161.0,"gb":13237364.0},{"end":"2026-04-04","wm":40875478.0,"gsc":12364840.0,"gb":13330078.0},{"end":"2026-04-11","wm":37254306.0,"gsc":11908496.0,"gb":12853236.0},{"end":"2026-04-18","wm":34029673.0,"gsc":11956371.0,"gb":12932073.0},{"end":"2026-04-25","wm":33426180.0,"gsc":12016916.0,"gb":12985749.0},{"end":"2026-05-02","wm":31415131.0,"gsc":12261678.0,"gb":13228513.0},{"end":"2026-05-09","wm":31956195.0,"gsc":12371174.0,"gb":13345886.0},{"end":"2026-05-16","wm":30335670.0,"gsc":12062448.0,"gb":12997611.0},{"end":"2026-05-23","wm":29579925.0,"gsc":12424809.0,"gb":13403558.0},{"end":"2026-05-30","wm":27706438.0,"gsc":12008941.0,"gb":12935650.0},{"end":"2026-06-06","wm":29795530.0,"gsc":12458229.0,"gb":13468082.0},{"end":"2026-06-13","wm":32434426.0,"gsc":12292729.0,"gb":13291915.0},{"end":"2026-06-20","wm":32504541.0,"gsc":12106001.0,"gb":13074143.0},{"end":"2026-06-27","wm":32832013.0,"gsc":12073883.0,"gb":13033561.0},{"end":"2026-07-04","wm":35728628.0,"gsc":12829461.0,"gb":13792638.0},{"end":"2026-07-11","wm":33743781.0,"gsc":12223081.0,"gb":13198977.0},{"end":"2026-07-18","wm":32666025.0,"gsc":12066244.0,"gb":13047257.0},{"end":"2026-07-25","wm":32531683.0,"gsc":11538538.0,"gb":12535701.0},{"end":"2026-08-01","wm":33289883.0,"gsc":11670374.0,"gb":12670666.0},{"end":"2026-08-08","wm":40014373.0,"gsc":11814064.0,"gb":12817820.0},{"end":"2026-08-15","wm":38835658.0,"gsc":11479283.0,"gb":null},{"end":"2026-08-22","wm":41260323.0,"gsc":11582228.0,"gb":null},{"end":"2026-08-29","wm":35019004.0,"gsc":11791548.0,"gb":null},{"end":"2026-09-05","wm":36234076.0,"gsc":11940072.0,"gb":null}],"corr":{"weeks_gsc":98,"weeks_gb":73,"r_levels_gsc":0.4086684662220568,"r_levels_gb":0.5665062341675904,"r_wow_gsc":0.6172587502082234,"r_wow_gb":0.574457045561111,"r_monthly_yoy":0.7512710183853596,"n_monthly_yoy":10,"mean_gap_pts":21.102312174449477,"same_sign_months":3,"r_weekly_yoy":0.598549609978443,"n_weekly_yoy":46},"ratio":[{"ym":"2024-11","gsc":2.0594422308236067,"gb":null},{"ym":"2024-12","gsc":2.11437676475278,"gb":null},{"ym":"2025-01","gsc":1.9840854483076318,"gb":null},{"ym":"2025-02","gsc":2.16542335012354,"gb":null},{"ym":"2025-03","gsc":2.3255923422248306,"gb":null},{"ym":"2025-04","gsc":2.2897895596060858,"gb":2.1382895813359935},{"ym":"2025-05","gsc":2.3344502828793856,"gb":2.17917863001221},{"ym":"2025-06","gsc":2.3621826468700737,"gb":2.1990977668388942},{"ym":"2025-07","gsc":2.4628120479740914,"gb":2.2955200798812894},{"ym":"2025-08","gsc":2.4032258993912214,"gb":2.243318452234788},{"ym":"2025-09","gsc":2.287972260782153,"gb":2.1498595993374763},{"ym":"2025-10","gsc":2.362142889406627,"gb":2.2101127487998364},{"ym":"2025-11","gsc":2.5752957062917234,"gb":2.397015959715727},{"ym":"2025-12","gsc":2.9115765961537203,"gb":2.6938628919258263},{"ym":"2026-01","gsc":2.60997764332099,"gb":2.394552394631138},{"ym":"2026-02","gsc":2.662840809447205,"gb":2.469472970415942},{"ym":"2026-03","gsc":2.99362097261678,"gb":2.772498792653135},{"ym":"2026-04","gsc":2.9099706580233957,"gb":2.6937398729517845},{"ym":"2026-05","gsc":2.4597351873130027,"gb":2.2836051272014073},{"ym":"2026-06","gsc":2.6213391967925004,"gb":2.425513030417071},{"ym":"2026-07","gsc":2.7868151742256337,"gb":2.574927586568945},{"ym":"2026-08","gsc":3.281400545125902,"gb":null}],"trend":{"wm":{"28":0.06147270608572275,"56":-0.01389450178228735,"91":-0.03885268105829176,"182":0.01320950676492938,"364":0.09822358869185477},"gsc":{"28":-0.2342354294551423,"56":-0.21995091066259342,"91":-0.20117552527296967,"182":-0.1562970117952438,"364":null},"gb":{"28":-0.2070453249672226,"56":-0.1881970134238593,"91":-0.1755038412857144,"182":null},"frank_google_299d":-0.108,"wm_aug":0.04788361103154992,"gsc_aug":-0.23505002664608454,"wm_sep1_7":0.029191762053408787,"gsc_sep1_6":-0.1997582495048169},"proj":{"months":[{"m":9,"ly":141090177.5,"lyCal":141490412.5,"wb":148100000.0,"wm_central":142924349.80749997,"wm_low":135587660.5775,"wm_high":149696678.3275,"gsc_trend":112706286.93058097,"gb_trend":116328309.38106672,"frank_trend":125852438.33,"inc_low":86089.14116521449,"inc20_low":86089.14116521449,"inc_mid":896784.0331952701,"inc20_mid":896784.0331952701,"inc_high":2400141.4363306565,"inc20_high":2400141.4363306565},{"m":10,"ly":154296445.0,"lyCal":154062082.0,"wb":161200000.0,"wm_central":156302298.785,"wm_low":148278883.64499998,"wm_high":163708528.14499998,"gsc_trend":123255776.62937312,"gb_trend":127216826.20577005,"frank_trend":137632428.94,"inc_low":423787.88090489915,"inc20_low":423787.88090489915,"inc_mid":2738860.357592526,"inc20_mid":2738860.357592526,"inc_high":6881767.4299605945,"inc20_high":6881767.4299605945},{"m":11,"ly":169748413.0,"lyCal":167352993.0,"wb":175100000.0,"wm_central":171955142.369,"wm_low":163128224.893,"wm_high":180103066.193,"gsc_trend":135599186.850472,"gb_trend":139956914.4663461,"frank_trend":151415584.396,"inc_low":1341106.1629048393,"inc20_low":1341106.1629048393,"inc_mid":5515389.590748049,"inc20_mid":5515389.590748049,"inc_high":12498483.908771176,"inc20_high":12498483.908771176},{"m":12,"ly":197134878.0,"lyCal":199563836.0,"wb":208800000.0,"wm_central":199697631.41399997,"wm_low":189446617.758,"wm_high":209160105.558,"gsc_trend":157476165.3687272,"gb_trend":162536949.65960932,"frank_trend":175844311.176,"inc_low":2867002.4738567984,"inc20_low":1891951.7710875373,"inc_mid":9157724.461011283,"inc20_mid":6156784.080141793,"inc_high":18967456.05518095,"inc20_high":12851023.697080892}],"scen":{"walmart_baseline":null,"wm_central":0.013,"wm_low":-0.039,"wm_high":0.061,"gsc_trend":-0.20117552527296967,"gb_trend":-0.1755038412857144,"frank_trend":-0.108},"rates":{"low":0.03976721562141258,"mid":0.07531855624239929,"high":0.11086989686338601},"totals":{"ly":662269913.5,"lyCal":662469323.5,"wb":693200000.0,"wm_central":670879422.3755,"wm_low":636441386.8735,"wm_high":702668378.2234999,"gsc_trend":529037415.77915335,"gb_trend":546038999.7127922,"frank_trend":590744762.842,"inc_low":4717985.658831751,"inc20_low":3742934.95606249,"inc_mid":18308758.442547128,"inc20_mid":15307818.061677638,"inc_high":40747848.83024338,"inc20_high":34631416.47214332}}};
+
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtM = n => n == null ? '—' : (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + 'M';
+const spct = x => x == null || !isFinite(x) ? '—' : (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(x * 100).toFixed(1) + '%';
+const dcls = x => x > 0.0005 ? 'up' : x < -0.0005 ? 'down' : 'flat';
+const dlt = x => `<span class="delta ${dcls(x)}">${spct(x)}</span>`;
+const ymL = ym => MON[+ym.slice(5, 7) - 1] + ' ' + ym.slice(2, 4);
+const CVAR = c => c.startsWith('--') ? `var(${c})` : c;
+const CH = {};
+function niceTicks(lo, hi, n) { if (hi === lo) hi = lo + 1; const span = hi - lo, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))); const step = [1, 2, 2.5, 5, 10].map(k => k * mag).find(s => span / s <= n) || 10 * mag; const t0 = Math.floor(lo / step) * step, out = []; for (let v = t0; v <= hi + step * .5; v += step) out.push(+v.toFixed(10)); return out; }
+function lineChart(o) {
+  const W = o.w || 820, H = o.h || 280, pad = {l: 54, r: 16, t: 16, b: 28}, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b, xs = o.xs, n = xs.length;
+  let lo = Infinity, hi = -Infinity; o.series.forEach(s => s.ys.forEach(v => { if (v != null && isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }));
+  (o.bands || []).forEach(b => b.lo.concat(b.hi).forEach(v => { if (v != null) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }));
+  if (o.yZero !== false) lo = Math.min(lo, 0);
+  const ticks = niceTicks(lo, hi, 5); lo = ticks[0]; hi = ticks[ticks.length - 1];
+  const X = x => pad.l + (n > 1 ? (x - xs[0]) / (xs[n - 1] - xs[0]) : .5) * iw, Y = v => pad.t + (1 - (v - lo) / (hi - lo)) * ih;
+  let g = '<g class="grid">' + ticks.map(t => `<line x1="${pad.l}" x2="${W - pad.r}" y1="${Y(t)}" y2="${Y(t)}"/>`).join('') + '</g>';
+  g += ticks.map(t => `<text x="${pad.l - 8}" y="${Y(t) + 4}" text-anchor="end">${esc(o.yFmt(t))}</text>`).join('');
+  if (lo < 0 && hi > 0) g += `<line class="zero" x1="${pad.l}" x2="${W - pad.r}" y1="${Y(0)}" y2="${Y(0)}"/>`;
+  (o.xTicks || xs).forEach(x => g += `<text x="${X(x)}" y="${H - 8}" text-anchor="middle">${esc(o.xLabel(x))}</text>`);
+  (o.bands || []).forEach(b => { let d = ''; b.lo.forEach((v, i) => { if (v != null) d += (d ? 'L' : 'M') + X(xs[i]).toFixed(1) + ' ' + Y(v).toFixed(1); }); for (let i = n - 1; i >= 0; i--) if (b.hi[i] != null) d += 'L' + X(xs[i]).toFixed(1) + ' ' + Y(b.hi[i]).toFixed(1); g += `<path fill="${CVAR(b.color)}" opacity=".16" d="${d}Z"/>`; });
+  o.series.forEach((s, si) => { let d = '', st = false; const pts = []; s.ys.forEach((v, i) => { if (v == null || !isFinite(v)) { st = false; return; } d += (st ? 'L' : 'M') + X(xs[i]).toFixed(1) + ' ' + Y(v).toFixed(1); st = true; pts.push([X(xs[i]), Y(v)]); });
+    if (s.area && pts.length > 1) g += `<path class="area" fill="${CVAR(s.color)}" d="${d}L${pts[pts.length - 1][0]} ${Y(Math.max(lo, 0))}L${pts[0][0]} ${Y(Math.max(lo, 0))}Z"/>`;
+    g += `<path class="line" stroke="${CVAR(s.color)}" ${s.dash ? 'stroke-dasharray="6 4"' : ''} ${s.width ? `stroke-width="${s.width}"` : ''} d="${d}"/>`;
+    if (s.dots) pts.forEach(([px, py]) => g += `<circle class="marker" cx="${px}" cy="${py}" r="4" fill="${CVAR(s.color)}"/>`);
+    if (s.endLabel && pts.length) { const [px, py] = pts[pts.length - 1]; g += `<text class="lbl" x="${px - 4}" y="${py - 8}" text-anchor="end">${esc(s.endLabel)}</text>`; } });
+  g += `<line class="cross" id="${o.id}-x" y1="${pad.t}" y2="${pad.t + ih}"/>` + o.series.map((s, si) => `<circle class="marker" id="${o.id}-d${si}" r="4.5" fill="${CVAR(s.color)}" opacity="0"/>`).join('') + `<rect class="hit" x="${pad.l}" y="${pad.t}" width="${iw}" height="${ih}"/>`;
+  CH[o.id] = {xs, X, Y, series: o.series, tipX: o.tipX || o.xLabel, yFmt: o.tipFmt || o.yFmt, W, H, pad};
+  const legend = `<div class="legend">${o.series.filter(s => !s.noLegend).map(s => `<span><i class="${s.dash ? 'dash' : ''}" style="border-color:${CVAR(s.color)}"></i>${esc(s.name)}</span>`).join('')}${o.legendExtra || ''}</div>`;
+  return `<div class="chart" data-chart="${o.id}"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.aria || '')}">${g}</svg><div class="tip" id="${o.id}-tip"></div></div>${legend}`;
+}
+function wire(root) { root.querySelectorAll('.chart').forEach(el => { const id = el.dataset.chart, C = CH[id], svg = el.querySelector('svg'), tip = el.querySelector('.tip');
+  const move = ev => { const r = svg.getBoundingClientRect(), mx = (ev.clientX - r.left) / r.width * C.W; let i, best = Infinity; C.xs.forEach((x, k) => { const d = Math.abs(C.X(x) - mx); if (d < best) { best = d; i = k; } }); const px = C.X(C.xs[i]); let rows = '';
+    C.series.forEach((s, si) => { const v = s.ys[i], dot = svg.querySelector('#' + id + '-d' + si); if (v == null || !isFinite(v)) dot.setAttribute('opacity', 0); else { dot.setAttribute('cx', px); dot.setAttribute('cy', C.Y(v)); dot.setAttribute('opacity', 1); } rows += `<div class="tr"><span><i style="background:${CVAR(s.color)}"></i>${esc(s.name)}</span><b>${v == null ? '—' : esc(C.yFmt(v))}</b></div>`; });
+    const cx = svg.querySelector('#' + id + '-x'); cx.setAttribute('x1', px); cx.setAttribute('x2', px); cx.setAttribute('opacity', 1);
+    tip.innerHTML = `<div class="th">${esc(C.tipX(C.xs[i]))}</div>${rows}`; tip.style.left = Math.max(90, Math.min(px / C.W * r.width, r.width - 90)) + 'px'; tip.style.top = (C.pad.t / C.H * r.height - 6) + 'px'; tip.style.opacity = 1; };
+  const leave = () => { tip.style.opacity = 0; svg.querySelector('#' + id + '-x').setAttribute('opacity', 0); C.series.forEach((_, si) => svg.querySelector('#' + id + '-d' + si).setAttribute('opacity', 0)); };
+  svg.addEventListener('mousemove', move); svg.addEventListener('mouseleave', leave); }); }
+
+// ─── content ────────────────────────────────────────────────────────────────
+const T = B.trend, C = B.corr, PJ = B.proj, tot = PJ.totals;
+const mo = B.monthly, xsM = mo.map((_, i) => i);
+const yoyChart = lineChart({id: 'yoy', xs: xsM, xLabel: i => ymL(mo[i].ym), tipX: i => ymL(mo[i].ym), yFmt: spct, h: 280,
+  series: [{name: 'Walmart SEO visits (their analytics)', color: '--wm', ys: mo.map(r => r.wm), dots: true, width: 2.5},
+           {name: 'Google Search Console clicks', color: '--bt', ys: mo.map(r => r.gsc), dots: true},
+           {name: 'Google + Bing clicks', color: '--bt-lo', ys: mo.map(r => r.gb), dash: true}], aria: 'Year over year by month, two sources'});
+// weekly indexed to the first four common weeks with Bing (Mar–Apr 2025)
+const wk = B.weekly.filter(w => w.gb != null), base4 = k => wk.slice(0, 4).reduce((a, w) => a + w[k], 0) / 4;
+const wAll = B.weekly, bW = base4('wm'), bG = wk.slice(0, 4).reduce((a, w) => a + w.gsc, 0) / 4, bGB = base4('gb');
+const startIdx = wAll.findIndex(w => w.end === wk[0].end);
+const wSel = wAll.slice(startIdx), xsW = wSel.map((_, i) => i);
+const idxChart = lineChart({id: 'idx', xs: xsW, xLabel: i => { const d = wSel[i].end; return MON[+d.slice(5, 7) - 1] + ' ' + d.slice(2, 4); }, xTicks: xsW.filter(i => i % 13 === 0), tipX: i => 'Week ending ' + wSel[i].end, yFmt: v => Math.round(v), tipFmt: v => Math.round(v), yZero: false, h: 260, w: 420,
+  series: [{name: 'Walmart visits', color: '--wm', ys: wSel.map(w => w.wm / bW * 100), width: 2.5},
+           {name: 'Google + Bing clicks', color: '--bt', ys: wSel.map(w => w.gb != null ? w.gb / bGB * 100 : null)},
+           {name: 'Google clicks only', color: '--bt-lo', ys: wSel.map(w => w.gsc / bG * 100), dash: true}], aria: 'Weekly, indexed to spring 2025 = 100'});
+const rat = B.ratio, xsR = rat.map((_, i) => i);
+const ratioChart = lineChart({id: 'ratio', xs: xsR, xLabel: i => ymL(rat[i].ym), xTicks: xsR.filter(i => i % 4 === 0), tipX: i => ymL(rat[i].ym), yFmt: v => v.toFixed(1) + '×', yZero: false, h: 260, w: 420,
+  series: [{name: 'Visits per Google click', color: '--wm', ys: rat.map(r => r.gsc), dots: true, width: 2.5}, {name: 'Visits per Google + Bing click', color: '--wm-lo', ys: rat.map(r => r.gb), dash: true}], aria: 'Walmart visits per click in our archive'});
+// projections chart: months Sep–Dec
+const pm = PJ.months, xsP = pm.map((_, i) => i);
+const projChart = lineChart({id: 'proj', xs: xsP, xLabel: i => MON[pm[i].m - 1] + ' 2026', tipX: i => MON[pm[i].m - 1] + ' 2026', yFmt: fmtM, tipFmt: fmtM, yZero: false, h: 300,
+  bands: [{lo: pm.map(r => r.wm_low), hi: pm.map(r => r.wm_high), color: '--wm'}],
+  series: [{name: 'Last year, same weekdays', color: '--ly', ys: pm.map(r => r.ly), dash: true, dots: true},
+           {name: 'Walmart’s proposed baseline (' + spct(tot.wb / tot.ly - 1) + ')', color: '--wm', ys: pm.map(r => r.wb), dots: true, width: 3},
+           {name: 'Our projection from Walmart’s data (' + spct(PJ.scen.wm_central) + ', shaded ' + spct(PJ.scen.wm_low) + ' to ' + spct(PJ.scen.wm_high) + ')', color: '--wm-lo', ys: pm.map(r => r.wm_central), dots: true},
+           {name: 'Our projection from Google + Bing trend (' + spct(PJ.scen.gb_trend) + ')', color: '--bt', ys: pm.map(r => r.gb_trend), dots: true}], aria: 'Four views of September to December visits'});
+
+const sheet = `
+<div class="memo"><b>To</b><span>Botify executive team</span><b>From</b><span>Ryan Locks</span><b>Date</b><span>9 September 2026</span><b>Re</b><span>Walmart SEO pilot · the baseline Walmart proposed, what our data says, what theirs says</span></div>
+<h1>Walmart’s baseline assumes the good month holds. Our data and theirs both say that is the optimistic case.</h1>
+<p class="lede">Walmart wants incremental SEO visits in the SpeedWorkers pilot measured against a fixed baseline for September to December: <b>${fmtM(tot.wb)} visits</b>, which is last year grown <b>${spct(tot.wb / tot.ly - 1)}</b>. That growth rate is August’s year-over-year figure carried forward. Our Google + Bing data has Walmart’s search traffic falling about a fifth year over year. Walmart’s own visit data is flat to slightly up over the last quarter and has cleared ${spct(tot.wb / tot.ly - 1)} in only one of the last four months.</p>
+
+<section>
+  <h2>Three numbers</h2>
+  <div class="tiles">
+    <div class="tile wm"><div class="k">Walmart’s baseline · Sep–Dec</div><div class="v num">${fmtM(tot.wb)}<small>visits</small></div><div class="d">${dlt(tot.wb / tot.ly - 1)} on last year’s ${fmtM(tot.ly)}. Four monthly figures, one growth rate, equal to August’s year-over-year.</div></div>
+    <div class="tile wm"><div class="k">Walmart’s own recent trend · visits</div><div class="v num">${spct(T.wm['91'])}<small>last 13 weeks</small></div><div class="d">${spct(T.wm['28'])} last 4 weeks · ${spct(T.wm['182'])} last 6 months · ${spct(T.wm['364'])} last 12 months. The trend decelerated sharply from April.</div></div>
+    <div class="tile bt"><div class="k">Our data · Google + Bing clicks</div><div class="v num">${spct(T.gb['91'])}<small>last 13 weeks</small></div><div class="d">Google alone ${spct(T.gsc['91'])} for the quarter and ${spct(T.gsc_aug)} in August. Non-branded Google, where SpeedWorkers acts, is down about a third.</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>What each dataset says about the last twelve months</h2>
+  <p class="sub">Year-over-year change by month, each month against the same weekdays a year earlier (Walmart’s own convention). Google Search Console and Bing Webmaster Tools count clicks on search results; Walmart’s analytics count site visits that reached a product page and are attributed to its SEO channel.</p>
+  ${yoyChart}
+  <p class="cap">From November 2025 to April 2026 Walmart reported double-digit growth while our archive showed declines of 7 to 11%. Both sources turned down in May 2026, the month Walmart began reporting a separate AI (“AEO”) channel. In August Walmart’s visits recovered to ${spct(T.wm_aug)}; Google clicks fell to ${spct(T.gsc_aug)}, the weakest month in the record.</p>
+</section>
+
+<section>
+  <h2>How well do the two datasets line up?</h2>
+  <p class="sub">They move together week to week and month to month; they do not agree on level or on direction over the year. The gap between them has widened steadily, so a click in our data has been worth an increasing number of Walmart visits.</p>
+  <div class="two">
+    <div>${idxChart}<p class="cap">Weekly totals, indexed to spring 2025. Same shape, diverging level.</p></div>
+    <div>${ratioChart}<p class="cap">Walmart SEO visits per click in our archive, by month. A stable measurement gap would be a flat line.</p></div>
+  </div>
+  <div class="tscroll"><table class="t"><thead><tr><th>Measure of agreement</th><th>Google clicks</th><th>Google + Bing clicks</th><th class="b">Read</th></tr></thead><tbody>
+    <tr><td>Correlation of weekly totals (levels)</td><td class="num">${C.r_levels_gsc.toFixed(2)}</td><td class="num">${C.r_levels_gb.toFixed(2)}</td><td class="b">Moderate. Both carry the same seasonality; the widening gap holds the coefficient down.</td></tr>
+    <tr><td>Correlation of week-over-week changes</td><td class="num">${C.r_wow_gsc.toFixed(2)}</td><td class="num">${C.r_wow_gb.toFixed(2)}</td><td class="b">Good. When one moves, the other moves the same way that week.</td></tr>
+    <tr><td>Correlation of monthly year-over-year rates (${C.n_monthly_yoy} months)</td><td class="num">${C.r_monthly_yoy.toFixed(2)}</td><td class="num">—</td><td class="b">Strong in shape, but Walmart runs ${C.mean_gap_pts.toFixed(0)} points higher on average. Same sign in only ${C.same_sign_months} of ${C.n_monthly_yoy} months.</td></tr>
+    <tr><td>Visits per click, Nov 2024 → Aug 2026</td><td class="num">${rat[0].gsc.toFixed(1)}× → ${rat[rat.length - 1].gsc.toFixed(1)}×</td><td class="num">${(rat.find(r => r.gb) || {}).gb.toFixed(1)}× → ${rat.filter(r => r.gb).slice(-1)[0].gb.toFixed(1)}×</td><td class="b">Walmart’s SEO channel is counting a growing amount of traffic that search consoles do not see.</td></tr>
+  </tbody></table></div>
+  <p class="cap">Likely reasons, none confirmed by Walmart: a visit is a session and a click is a click; Walmart’s SEO channel includes every organic referrer plus surfaces such as Discover, images and shopping that Search Console’s web report excludes; Walmart attributes on a 3-day window; and traffic was reclassified when the AEO channel launched in May.</p>
+</section>
+
+<section>
+  <h2>September to December: four views of the same window</h2>
+  <p class="sub">All in Walmart visits, calendar months, so they can be read against Walmart’s clause. Our projections take last year’s aligned days and apply a measured trend; the shaded band is the range of trend readings in Walmart’s own data over the last quarter to the last month.</p>
+  ${projChart}
+  <div class="tscroll"><table class="t"><thead><tr><th>Sep–Dec 2026, visits</th><th>Total</th><th>vs last year</th><th>vs Walmart’s baseline</th><th class="b">Basis</th></tr></thead><tbody>
+    <tr><td><span class="dot ly"></span>Last year, same weekdays</td><td class="num">${fmtM(tot.ly)}</td><td class="num">—</td><td class="num">${dlt(tot.ly / tot.wb - 1)}</td><td class="b">Walmart export, Sep 2 – Dec 31 2025</td></tr>
+    <tr><td><span class="dot wm"></span>Walmart’s proposed baseline</td><td class="num"><b>${fmtM(tot.wb)}</b></td><td class="num">${dlt(tot.wb / tot.ly - 1)}</td><td class="num">—</td><td class="b">August’s year-over-year applied to every month</td></tr>
+    <tr><td><span class="dot wm"></span>Our projection from Walmart’s data · central</td><td class="num">${fmtM(tot.wm_central)}</td><td class="num">${dlt(PJ.scen.wm_central)}</td><td class="num">${dlt(tot.wm_central / tot.wb - 1)}</td><td class="b">Six-month trend in Walmart’s own visits</td></tr>
+    <tr class="sub"><td style="padding-left:26px">range: last 13 weeks to last 4 weeks</td><td class="num">${fmtM(tot.wm_low)} – ${fmtM(tot.wm_high)}</td><td class="num">${spct(PJ.scen.wm_low)} to ${spct(PJ.scen.wm_high)}</td><td class="num">${spct(tot.wm_low / tot.wb - 1)} to ${spct(tot.wm_high / tot.wb - 1)}</td><td class="b">Only the most recent four weeks clear the baseline</td></tr>
+    <tr><td><span class="dot bt"></span>Our projection from Google + Bing trend</td><td class="num">${fmtM(tot.gb_trend)}</td><td class="num">${dlt(PJ.scen.gb_trend)}</td><td class="num">${dlt(tot.gb_trend / tot.wb - 1)}</td><td class="b">13-week click trend applied to Walmart’s visit base</td></tr>
+    <tr class="sub"><td style="padding-left:26px">Frank’s August model, Google clicks −10.8%</td><td class="num">${fmtM(tot.frank_trend)}</td><td class="num">${spct(PJ.scen.frank_trend)}</td><td class="num">${spct(tot.frank_trend / tot.wb - 1)}</td><td class="b">The trend in our pilot forecast as delivered</td></tr>
+    <tr class="total"><td>SpeedWorkers lift on top of the central case</td><td class="num">+${fmtM(tot.inc_low)} / +${fmtM(tot.inc_mid)} / +${fmtM(tot.inc_high)}</td><td class="num">+0.7% / +2.7% / +6.1%</td><td class="num">${dlt((tot.wm_central + tot.inc_low) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_mid) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_high) / tot.wb - 1)}</td><td class="b">Low / mid / high, ramping from 1 Sep; ${fmtM(tot.inc20_low)} – ${fmtM(tot.inc20_high)} by the 20 Dec measurement close</td></tr>
+  </tbody></table></div>
+</section>
+
+<section>
+  <h2>What this means</h2>
+  <div class="takeaways">
+    <div class="take"><div class="n">1</div><div><b>The clause as drafted would report a failed pilot in most plausible scenarios.</b><p>At Walmart’s own six-month trend, the site lands ${fmtM(tot.wb - tot.wm_central)} visits under the baseline before SpeedWorkers adds anything. Our mid case adds ${fmtM(tot.inc_mid)}. Only the high case, on the most optimistic recent trend, shows as positive incremental.</p></div></div>
+    <div class="take"><div class="n">2</div><div><b>Our Google + Bing data cannot be the source of record, and should not set the baseline either.</b><p>It correlates with Walmart’s visits in shape but runs 20 points more negative on year-over-year and diverges further every month. A baseline from our data would be easy to beat and easy for Walmart to reject.</p></div></div>
+    <div class="take"><div class="n">3</div><div><b>Ask for a baseline built on a method, not a month.</b><p>A trailing 13-week or 6-month year-over-year read from Walmart’s own data, frozen at launch, gives ${fmtM(tot.wm_low)} – ${fmtM(tot.wm_central)}. Alternatively, a URL-level holdout removes the trend argument entirely, which is what Frank’s framework recommended.</p></div></div>
+    <div class="take"><div class="n">4</div><div><b>Two drafting gaps.</b><p>December is set as a full month while measurement closes on the 20th, and the AI (AEO) channel, where Walmart’s visits have doubled since June, is not mentioned.</p></div></div>
+  </div>
+</section>
+
+<footer>Sources: Walmart DMP exports, SEO marketing vehicle (daily PDP++ visits, 9 Jul 2024 – 7 Sep 2026); Google Search Console, US web, walmart.com domain property via the Botify platform (15 Oct 2024 – 6 Sep 2026); Bing Webmaster Tools property totals (13 Mar 2025 – 8 Aug 2026); Walmart draft baseline clause received 9 Sep 2026. Year-over-year uses 364-day alignment throughout. SpeedWorkers lift uses the tiers in Frank’s 13 Aug model, expressed as a share of the traffic base and ramped over three tranches. Full interactive model: Walmart Pilot Rebase artifact.</footer>`;
+document.getElementById('sheet').innerHTML = sheet;
+wire(document.getElementById('sheet'));
+</script>

@@ -1,0 +1,224 @@
+<title>Walmart Baseline Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..800&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --page:#F4F6F9; --surface:#FFFFFF; --sunk:#EEF2F7;
+  --ink:#14213A; --ink-2:#46536B; --muted:#7C879B; --rule:#DDE3EB; --rule-soft:#EAEEF3;
+  --wm:#1A6FD1; --wm-lo:#5FA3E8; --wm-soft:rgba(26,111,209,.12);
+  --bt:#B85C1A; --bt-lo:#E0954F;
+  --ly:#98A4B8; --good:#0B7A3B; --bad:#B42318; --warn:#9A6700;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
+  --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; } }
+:root[data-theme="dark"] {
+  color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
+  --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; --warn:#E0B341; }
+
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font:15px/1.5 "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased; }
+h1,h2,h3 { margin:0; letter-spacing:-.015em; text-wrap:balance; }
+p { margin:0; }
+.num { font-variant-numeric:tabular-nums; }
+.sheet { max-width:920px; margin:28px auto 60px; background:var(--surface); border:1px solid var(--rule); border-radius:6px; padding:44px 52px 40px; }
+@media (max-width:700px){ .sheet { margin:0; border:0; border-radius:0; padding:28px 18px; } }
+.memo { display:grid; grid-template-columns:auto 1fr; gap:4px 18px; font-size:12.5px; color:var(--ink-2); margin-bottom:26px; padding-bottom:16px; border-bottom:1px solid var(--rule); }
+.memo b { font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:11px; color:var(--muted); padding-top:2px; }
+h1 { font-size:30px; line-height:1.12; font-weight:700; }
+.lede { margin-top:12px; font-size:16px; color:var(--ink-2); max-width:70ch; }
+.lede b { color:var(--ink); }
+section { margin-top:34px; break-inside:avoid; }
+section h2 { font-size:19px; margin-bottom:6px; }
+section .sub { color:var(--ink-2); font-size:14px; max-width:76ch; margin-bottom:14px; }
+.tiles { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px; }
+@media (max-width:700px){ .tiles { grid-template-columns:1fr; } }
+.tile { border-top:3px solid var(--rule); padding:12px 0 0; }
+.tile.wm { border-top-color:var(--wm); } .tile.bt { border-top-color:var(--bt); }
+.tile .k { font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); }
+.tile .v { font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.1; margin-top:6px; }
+.tile .v small { font-size:14px; font-weight:600; color:var(--ink-2); letter-spacing:0; margin-left:6px; }
+.tile .d { font-size:13px; color:var(--ink-2); margin-top:6px; line-height:1.45; }
+.chart { position:relative; }
+.chart svg { display:block; width:100%; height:auto; overflow:visible; }
+.chart .grid line { stroke:var(--rule-soft); stroke-width:1; }
+.chart text { fill:var(--muted); font-size:11.5px; font-family:inherit; }
+.chart text.lbl { fill:var(--ink-2); font-size:11.5px; font-weight:600; }
+.chart .zero { stroke:var(--rule); stroke-width:1; }
+.chart .cross { stroke:var(--ink-2); stroke-width:1; opacity:0; }
+.chart path.line { fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+.chart path.area { opacity:.12; }
+.chart .marker { stroke:var(--surface); stroke-width:2; }
+.chart .hit { fill:transparent; }
+.tip { position:absolute; pointer-events:none; z-index:5; background:var(--ink); color:var(--surface); font-size:12px; line-height:1.4; padding:8px 10px; border-radius:6px; opacity:0; transform:translate(-50%,-100%); white-space:nowrap; transition:opacity .08s; }
+.tip .th { font-weight:700; margin-bottom:3px; } .tip .tr { display:flex; justify-content:space-between; gap:14px; } .tip .tr i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+.legend { display:flex; gap:8px 18px; flex-wrap:wrap; margin-top:8px; font-size:12.5px; color:var(--ink-2); }
+.legend span { display:inline-flex; align-items:center; gap:7px; } .legend i { display:inline-block; width:18px; height:0; border-top:2px solid; } .legend i.dash { border-top-style:dashed; } .legend i.sq { width:12px; height:12px; border:0; border-radius:2px; }
+.cap { font-size:13px; color:var(--ink-2); margin-top:10px; max-width:76ch; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+@media (max-width:700px){ .two { grid-template-columns:1fr; } }
+table.t { width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px; }
+table.t th, table.t td { padding:8px 10px; border-bottom:1px solid var(--rule-soft); text-align:right; white-space:nowrap; vertical-align:top; }
+table.t th { font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--rule); }
+table.t th:first-child, table.t td:first-child { text-align:left; white-space:normal; min-width:200px; }
+table.t td.b, table.t th.b { text-align:left; white-space:normal; min-width:220px; }
+table.t tr.total td { font-weight:700; border-top:1px solid var(--rule); }
+table.t tr.sub td { color:var(--ink-2); }
+.tscroll { overflow-x:auto; }
+.delta { font-weight:700; } .up { color:var(--good); } .down { color:var(--bad); } .flat { color:var(--ink-2); }
+.dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; vertical-align:1px; }
+.dot.wm { background:var(--wm); } .dot.bt { background:var(--bt); } .dot.ly { background:var(--ly); }
+.takeaways { display:grid; gap:12px; }
+.take { display:grid; grid-template-columns:22px 1fr; gap:12px; font-size:14.5px; }
+.take .n { width:22px; height:22px; border-radius:50%; background:var(--ink); color:var(--surface); font-size:12px; font-weight:700; display:grid; place-items:center; margin-top:2px; }
+.take b { color:var(--ink); }
+.take p { color:var(--ink-2); }
+footer { margin-top:34px; padding-top:14px; border-top:1px solid var(--rule); font-size:12px; color:var(--muted); line-height:1.55; }
+@media print {
+  body { background:#fff; } .sheet { margin:0; border:0; padding:0; max-width:none; }
+  section { break-inside:avoid; } .tip { display:none; }
+}
+</style>
+
+<div class="sheet" id="sheet"></div>
+
+<script>
+const B = /*__BRIEF__*/null;
+
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtM = n => n == null ? '—' : (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + 'M';
+const spct = x => x == null || !isFinite(x) ? '—' : (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(x * 100).toFixed(1) + '%';
+const dcls = x => x > 0.0005 ? 'up' : x < -0.0005 ? 'down' : 'flat';
+const dlt = x => `<span class="delta ${dcls(x)}">${spct(x)}</span>`;
+const ymL = ym => MON[+ym.slice(5, 7) - 1] + ' ' + ym.slice(2, 4);
+const CVAR = c => c.startsWith('--') ? `var(${c})` : c;
+const CH = {};
+function niceTicks(lo, hi, n) { if (hi === lo) hi = lo + 1; const span = hi - lo, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))); const step = [1, 2, 2.5, 5, 10].map(k => k * mag).find(s => span / s <= n) || 10 * mag; const t0 = Math.floor(lo / step) * step, out = []; for (let v = t0; v <= hi + step * .5; v += step) out.push(+v.toFixed(10)); return out; }
+function lineChart(o) {
+  const W = o.w || 820, H = o.h || 280, pad = {l: 54, r: 16, t: 16, b: 28}, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b, xs = o.xs, n = xs.length;
+  let lo = Infinity, hi = -Infinity; o.series.forEach(s => s.ys.forEach(v => { if (v != null && isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }));
+  (o.bands || []).forEach(b => b.lo.concat(b.hi).forEach(v => { if (v != null) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }));
+  if (o.yZero !== false) lo = Math.min(lo, 0);
+  const ticks = niceTicks(lo, hi, 5); lo = ticks[0]; hi = ticks[ticks.length - 1];
+  const X = x => pad.l + (n > 1 ? (x - xs[0]) / (xs[n - 1] - xs[0]) : .5) * iw, Y = v => pad.t + (1 - (v - lo) / (hi - lo)) * ih;
+  let g = '<g class="grid">' + ticks.map(t => `<line x1="${pad.l}" x2="${W - pad.r}" y1="${Y(t)}" y2="${Y(t)}"/>`).join('') + '</g>';
+  g += ticks.map(t => `<text x="${pad.l - 8}" y="${Y(t) + 4}" text-anchor="end">${esc(o.yFmt(t))}</text>`).join('');
+  if (lo < 0 && hi > 0) g += `<line class="zero" x1="${pad.l}" x2="${W - pad.r}" y1="${Y(0)}" y2="${Y(0)}"/>`;
+  (o.xTicks || xs).forEach(x => g += `<text x="${X(x)}" y="${H - 8}" text-anchor="middle">${esc(o.xLabel(x))}</text>`);
+  (o.bands || []).forEach(b => { let d = ''; b.lo.forEach((v, i) => { if (v != null) d += (d ? 'L' : 'M') + X(xs[i]).toFixed(1) + ' ' + Y(v).toFixed(1); }); for (let i = n - 1; i >= 0; i--) if (b.hi[i] != null) d += 'L' + X(xs[i]).toFixed(1) + ' ' + Y(b.hi[i]).toFixed(1); g += `<path fill="${CVAR(b.color)}" opacity=".16" d="${d}Z"/>`; });
+  o.series.forEach((s, si) => { let d = '', st = false; const pts = []; s.ys.forEach((v, i) => { if (v == null || !isFinite(v)) { st = false; return; } d += (st ? 'L' : 'M') + X(xs[i]).toFixed(1) + ' ' + Y(v).toFixed(1); st = true; pts.push([X(xs[i]), Y(v)]); });
+    if (s.area && pts.length > 1) g += `<path class="area" fill="${CVAR(s.color)}" d="${d}L${pts[pts.length - 1][0]} ${Y(Math.max(lo, 0))}L${pts[0][0]} ${Y(Math.max(lo, 0))}Z"/>`;
+    g += `<path class="line" stroke="${CVAR(s.color)}" ${s.dash ? 'stroke-dasharray="6 4"' : ''} ${s.width ? `stroke-width="${s.width}"` : ''} d="${d}"/>`;
+    if (s.dots) pts.forEach(([px, py]) => g += `<circle class="marker" cx="${px}" cy="${py}" r="4" fill="${CVAR(s.color)}"/>`);
+    if (s.endLabel && pts.length) { const [px, py] = pts[pts.length - 1]; g += `<text class="lbl" x="${px - 4}" y="${py - 8}" text-anchor="end">${esc(s.endLabel)}</text>`; } });
+  g += `<line class="cross" id="${o.id}-x" y1="${pad.t}" y2="${pad.t + ih}"/>` + o.series.map((s, si) => `<circle class="marker" id="${o.id}-d${si}" r="4.5" fill="${CVAR(s.color)}" opacity="0"/>`).join('') + `<rect class="hit" x="${pad.l}" y="${pad.t}" width="${iw}" height="${ih}"/>`;
+  CH[o.id] = {xs, X, Y, series: o.series, tipX: o.tipX || o.xLabel, yFmt: o.tipFmt || o.yFmt, W, H, pad};
+  const legend = `<div class="legend">${o.series.filter(s => !s.noLegend).map(s => `<span><i class="${s.dash ? 'dash' : ''}" style="border-color:${CVAR(s.color)}"></i>${esc(s.name)}</span>`).join('')}${o.legendExtra || ''}</div>`;
+  return `<div class="chart" data-chart="${o.id}"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.aria || '')}">${g}</svg><div class="tip" id="${o.id}-tip"></div></div>${legend}`;
+}
+function wire(root) { root.querySelectorAll('.chart').forEach(el => { const id = el.dataset.chart, C = CH[id], svg = el.querySelector('svg'), tip = el.querySelector('.tip');
+  const move = ev => { const r = svg.getBoundingClientRect(), mx = (ev.clientX - r.left) / r.width * C.W; let i, best = Infinity; C.xs.forEach((x, k) => { const d = Math.abs(C.X(x) - mx); if (d < best) { best = d; i = k; } }); const px = C.X(C.xs[i]); let rows = '';
+    C.series.forEach((s, si) => { const v = s.ys[i], dot = svg.querySelector('#' + id + '-d' + si); if (v == null || !isFinite(v)) dot.setAttribute('opacity', 0); else { dot.setAttribute('cx', px); dot.setAttribute('cy', C.Y(v)); dot.setAttribute('opacity', 1); } rows += `<div class="tr"><span><i style="background:${CVAR(s.color)}"></i>${esc(s.name)}</span><b>${v == null ? '—' : esc(C.yFmt(v))}</b></div>`; });
+    const cx = svg.querySelector('#' + id + '-x'); cx.setAttribute('x1', px); cx.setAttribute('x2', px); cx.setAttribute('opacity', 1);
+    tip.innerHTML = `<div class="th">${esc(C.tipX(C.xs[i]))}</div>${rows}`; tip.style.left = Math.max(90, Math.min(px / C.W * r.width, r.width - 90)) + 'px'; tip.style.top = (C.pad.t / C.H * r.height - 6) + 'px'; tip.style.opacity = 1; };
+  const leave = () => { tip.style.opacity = 0; svg.querySelector('#' + id + '-x').setAttribute('opacity', 0); C.series.forEach((_, si) => svg.querySelector('#' + id + '-d' + si).setAttribute('opacity', 0)); };
+  svg.addEventListener('mousemove', move); svg.addEventListener('mouseleave', leave); }); }
+
+// ─── content ────────────────────────────────────────────────────────────────
+const T = B.trend, C = B.corr, PJ = B.proj, tot = PJ.totals;
+const mo = B.monthly, xsM = mo.map((_, i) => i);
+const yoyChart = lineChart({id: 'yoy', xs: xsM, xLabel: i => ymL(mo[i].ym), tipX: i => ymL(mo[i].ym), yFmt: spct, h: 280,
+  series: [{name: 'Walmart SEO visits (their analytics)', color: '--wm', ys: mo.map(r => r.wm), dots: true, width: 2.5},
+           {name: 'Google Search Console clicks', color: '--bt', ys: mo.map(r => r.gsc), dots: true},
+           {name: 'Google + Bing clicks', color: '--bt-lo', ys: mo.map(r => r.gb), dash: true}], aria: 'Year over year by month, two sources'});
+// weekly indexed to the first four common weeks with Bing (Mar–Apr 2025)
+const wk = B.weekly.filter(w => w.gb != null), base4 = k => wk.slice(0, 4).reduce((a, w) => a + w[k], 0) / 4;
+const wAll = B.weekly, bW = base4('wm'), bG = wk.slice(0, 4).reduce((a, w) => a + w.gsc, 0) / 4, bGB = base4('gb');
+const startIdx = wAll.findIndex(w => w.end === wk[0].end);
+const wSel = wAll.slice(startIdx), xsW = wSel.map((_, i) => i);
+const idxChart = lineChart({id: 'idx', xs: xsW, xLabel: i => { const d = wSel[i].end; return MON[+d.slice(5, 7) - 1] + ' ' + d.slice(2, 4); }, xTicks: xsW.filter(i => i % 13 === 0), tipX: i => 'Week ending ' + wSel[i].end, yFmt: v => Math.round(v), tipFmt: v => Math.round(v), yZero: false, h: 260, w: 420,
+  series: [{name: 'Walmart visits', color: '--wm', ys: wSel.map(w => w.wm / bW * 100), width: 2.5},
+           {name: 'Google + Bing clicks', color: '--bt', ys: wSel.map(w => w.gb != null ? w.gb / bGB * 100 : null)},
+           {name: 'Google clicks only', color: '--bt-lo', ys: wSel.map(w => w.gsc / bG * 100), dash: true}], aria: 'Weekly, indexed to spring 2025 = 100'});
+const rat = B.ratio, xsR = rat.map((_, i) => i);
+const ratioChart = lineChart({id: 'ratio', xs: xsR, xLabel: i => ymL(rat[i].ym), xTicks: xsR.filter(i => i % 4 === 0), tipX: i => ymL(rat[i].ym), yFmt: v => v.toFixed(1) + '×', yZero: false, h: 260, w: 420,
+  series: [{name: 'Visits per Google click', color: '--wm', ys: rat.map(r => r.gsc), dots: true, width: 2.5}, {name: 'Visits per Google + Bing click', color: '--wm-lo', ys: rat.map(r => r.gb), dash: true}], aria: 'Walmart visits per click in our archive'});
+// projections chart: months Sep–Dec
+const pm = PJ.months, xsP = pm.map((_, i) => i);
+const projChart = lineChart({id: 'proj', xs: xsP, xLabel: i => MON[pm[i].m - 1] + ' 2026', tipX: i => MON[pm[i].m - 1] + ' 2026', yFmt: fmtM, tipFmt: fmtM, yZero: false, h: 300,
+  bands: [{lo: pm.map(r => r.wm_low), hi: pm.map(r => r.wm_high), color: '--wm'}],
+  series: [{name: 'Last year, same weekdays', color: '--ly', ys: pm.map(r => r.ly), dash: true, dots: true},
+           {name: 'Walmart’s proposed baseline (' + spct(tot.wb / tot.ly - 1) + ')', color: '--wm', ys: pm.map(r => r.wb), dots: true, width: 3},
+           {name: 'Our projection from Walmart’s data (' + spct(PJ.scen.wm_central) + ', shaded ' + spct(PJ.scen.wm_low) + ' to ' + spct(PJ.scen.wm_high) + ')', color: '--wm-lo', ys: pm.map(r => r.wm_central), dots: true},
+           {name: 'Our projection from Google + Bing trend (' + spct(PJ.scen.gb_trend) + ')', color: '--bt', ys: pm.map(r => r.gb_trend), dots: true}], aria: 'Four views of September to December visits'});
+
+const sheet = `
+<div class="memo"><b>To</b><span>Botify executive team</span><b>From</b><span>Ryan Locks</span><b>Date</b><span>9 September 2026</span><b>Re</b><span>Walmart SEO pilot · the baseline Walmart proposed, what our data says, what theirs says</span></div>
+<h1>Walmart’s baseline assumes the good month holds. Our data and theirs both say that is the optimistic case.</h1>
+<p class="lede">Walmart wants incremental SEO visits in the SpeedWorkers pilot measured against a fixed baseline for September to December: <b>${fmtM(tot.wb)} visits</b>, which is last year grown <b>${spct(tot.wb / tot.ly - 1)}</b>. That growth rate is August’s year-over-year figure carried forward. Our Google + Bing data has Walmart’s search traffic falling about a fifth year over year. Walmart’s own visit data is flat to slightly up over the last quarter and has cleared ${spct(tot.wb / tot.ly - 1)} in only one of the last four months.</p>
+
+<section>
+  <h2>Three numbers</h2>
+  <div class="tiles">
+    <div class="tile wm"><div class="k">Walmart’s baseline · Sep–Dec</div><div class="v num">${fmtM(tot.wb)}<small>visits</small></div><div class="d">${dlt(tot.wb / tot.ly - 1)} on last year’s ${fmtM(tot.ly)}. Four monthly figures, one growth rate, equal to August’s year-over-year.</div></div>
+    <div class="tile wm"><div class="k">Walmart’s own recent trend · visits</div><div class="v num">${spct(T.wm['91'])}<small>last 13 weeks</small></div><div class="d">${spct(T.wm['28'])} last 4 weeks · ${spct(T.wm['182'])} last 6 months · ${spct(T.wm['364'])} last 12 months. The trend decelerated sharply from April.</div></div>
+    <div class="tile bt"><div class="k">Our data · Google + Bing clicks</div><div class="v num">${spct(T.gb['91'])}<small>last 13 weeks</small></div><div class="d">Google alone ${spct(T.gsc['91'])} for the quarter and ${spct(T.gsc_aug)} in August. Non-branded Google, where SpeedWorkers acts, is down about a third.</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>What each dataset says about the last twelve months</h2>
+  <p class="sub">Year-over-year change by month, each month against the same weekdays a year earlier (Walmart’s own convention). Google Search Console and Bing Webmaster Tools count clicks on search results; Walmart’s analytics count site visits that reached a product page and are attributed to its SEO channel.</p>
+  ${yoyChart}
+  <p class="cap">From November 2025 to April 2026 Walmart reported double-digit growth while our archive showed declines of 7 to 11%. Both sources turned down in May 2026, the month Walmart began reporting a separate AI (“AEO”) channel. In August Walmart’s visits recovered to ${spct(T.wm_aug)}; Google clicks fell to ${spct(T.gsc_aug)}, the weakest month in the record.</p>
+</section>
+
+<section>
+  <h2>How well do the two datasets line up?</h2>
+  <p class="sub">They move together week to week and month to month; they do not agree on level or on direction over the year. The gap between them has widened steadily, so a click in our data has been worth an increasing number of Walmart visits.</p>
+  <div class="two">
+    <div>${idxChart}<p class="cap">Weekly totals, indexed to spring 2025. Same shape, diverging level.</p></div>
+    <div>${ratioChart}<p class="cap">Walmart SEO visits per click in our archive, by month. A stable measurement gap would be a flat line.</p></div>
+  </div>
+  <div class="tscroll"><table class="t"><thead><tr><th>Measure of agreement</th><th>Google clicks</th><th>Google + Bing clicks</th><th class="b">Read</th></tr></thead><tbody>
+    <tr><td>Correlation of weekly totals (levels)</td><td class="num">${C.r_levels_gsc.toFixed(2)}</td><td class="num">${C.r_levels_gb.toFixed(2)}</td><td class="b">Moderate. Both carry the same seasonality; the widening gap holds the coefficient down.</td></tr>
+    <tr><td>Correlation of week-over-week changes</td><td class="num">${C.r_wow_gsc.toFixed(2)}</td><td class="num">${C.r_wow_gb.toFixed(2)}</td><td class="b">Good. When one moves, the other moves the same way that week.</td></tr>
+    <tr><td>Correlation of monthly year-over-year rates (${C.n_monthly_yoy} months)</td><td class="num">${C.r_monthly_yoy.toFixed(2)}</td><td class="num">—</td><td class="b">Strong in shape, but Walmart runs ${C.mean_gap_pts.toFixed(0)} points higher on average. Same sign in only ${C.same_sign_months} of ${C.n_monthly_yoy} months.</td></tr>
+    <tr><td>Visits per click, Nov 2024 → Aug 2026</td><td class="num">${rat[0].gsc.toFixed(1)}× → ${rat[rat.length - 1].gsc.toFixed(1)}×</td><td class="num">${(rat.find(r => r.gb) || {}).gb.toFixed(1)}× → ${rat.filter(r => r.gb).slice(-1)[0].gb.toFixed(1)}×</td><td class="b">Walmart’s SEO channel is counting a growing amount of traffic that search consoles do not see.</td></tr>
+  </tbody></table></div>
+  <p class="cap">Likely reasons, none confirmed by Walmart: a visit is a session and a click is a click; Walmart’s SEO channel includes every organic referrer plus surfaces such as Discover, images and shopping that Search Console’s web report excludes; Walmart attributes on a 3-day window; and traffic was reclassified when the AEO channel launched in May.</p>
+</section>
+
+<section>
+  <h2>September to December: four views of the same window</h2>
+  <p class="sub">All in Walmart visits, calendar months, so they can be read against Walmart’s clause. Our projections take last year’s aligned days and apply a measured trend; the shaded band is the range of trend readings in Walmart’s own data over the last quarter to the last month.</p>
+  ${projChart}
+  <div class="tscroll"><table class="t"><thead><tr><th>Sep–Dec 2026, visits</th><th>Total</th><th>vs last year</th><th>vs Walmart’s baseline</th><th class="b">Basis</th></tr></thead><tbody>
+    <tr><td><span class="dot ly"></span>Last year, same weekdays</td><td class="num">${fmtM(tot.ly)}</td><td class="num">—</td><td class="num">${dlt(tot.ly / tot.wb - 1)}</td><td class="b">Walmart export, Sep 2 – Dec 31 2025</td></tr>
+    <tr><td><span class="dot wm"></span>Walmart’s proposed baseline</td><td class="num"><b>${fmtM(tot.wb)}</b></td><td class="num">${dlt(tot.wb / tot.ly - 1)}</td><td class="num">—</td><td class="b">August’s year-over-year applied to every month</td></tr>
+    <tr><td><span class="dot wm"></span>Our projection from Walmart’s data · central</td><td class="num">${fmtM(tot.wm_central)}</td><td class="num">${dlt(PJ.scen.wm_central)}</td><td class="num">${dlt(tot.wm_central / tot.wb - 1)}</td><td class="b">Six-month trend in Walmart’s own visits</td></tr>
+    <tr class="sub"><td style="padding-left:26px">range: last 13 weeks to last 4 weeks</td><td class="num">${fmtM(tot.wm_low)} – ${fmtM(tot.wm_high)}</td><td class="num">${spct(PJ.scen.wm_low)} to ${spct(PJ.scen.wm_high)}</td><td class="num">${spct(tot.wm_low / tot.wb - 1)} to ${spct(tot.wm_high / tot.wb - 1)}</td><td class="b">Only the most recent four weeks clear the baseline</td></tr>
+    <tr><td><span class="dot bt"></span>Our projection from Google + Bing trend</td><td class="num">${fmtM(tot.gb_trend)}</td><td class="num">${dlt(PJ.scen.gb_trend)}</td><td class="num">${dlt(tot.gb_trend / tot.wb - 1)}</td><td class="b">13-week click trend applied to Walmart’s visit base</td></tr>
+    <tr class="sub"><td style="padding-left:26px">Frank’s August model, Google clicks −10.8%</td><td class="num">${fmtM(tot.frank_trend)}</td><td class="num">${spct(PJ.scen.frank_trend)}</td><td class="num">${spct(tot.frank_trend / tot.wb - 1)}</td><td class="b">The trend in our pilot forecast as delivered</td></tr>
+    <tr class="total"><td>SpeedWorkers lift on top of the central case</td><td class="num">+${fmtM(tot.inc_low)} / +${fmtM(tot.inc_mid)} / +${fmtM(tot.inc_high)}</td><td class="num">+0.7% / +2.7% / +6.1%</td><td class="num">${dlt((tot.wm_central + tot.inc_low) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_mid) / tot.wb - 1)} / ${dlt((tot.wm_central + tot.inc_high) / tot.wb - 1)}</td><td class="b">Low / mid / high, ramping from 1 Sep; ${fmtM(tot.inc20_low)} – ${fmtM(tot.inc20_high)} by the 20 Dec measurement close</td></tr>
+  </tbody></table></div>
+</section>
+
+<section>
+  <h2>What this means</h2>
+  <div class="takeaways">
+    <div class="take"><div class="n">1</div><div><b>The clause as drafted would report a failed pilot in most plausible scenarios.</b><p>At Walmart’s own six-month trend, the site lands ${fmtM(tot.wb - tot.wm_central)} visits under the baseline before SpeedWorkers adds anything. Our mid case adds ${fmtM(tot.inc_mid)}. Only the high case, on the most optimistic recent trend, shows as positive incremental.</p></div></div>
+    <div class="take"><div class="n">2</div><div><b>Our Google + Bing data cannot be the source of record, and should not set the baseline either.</b><p>It correlates with Walmart’s visits in shape but runs 20 points more negative on year-over-year and diverges further every month. A baseline from our data would be easy to beat and easy for Walmart to reject.</p></div></div>
+    <div class="take"><div class="n">3</div><div><b>Ask for a baseline built on a method, not a month.</b><p>A trailing 13-week or 6-month year-over-year read from Walmart’s own data, frozen at launch, gives ${fmtM(tot.wm_low)} – ${fmtM(tot.wm_central)}. Alternatively, a URL-level holdout removes the trend argument entirely, which is what Frank’s framework recommended.</p></div></div>
+    <div class="take"><div class="n">4</div><div><b>Two drafting gaps.</b><p>December is set as a full month while measurement closes on the 20th, and the AI (AEO) channel, where Walmart’s visits have doubled since June, is not mentioned.</p></div></div>
+  </div>
+</section>
+
+<footer>Sources: Walmart DMP exports, SEO marketing vehicle (daily PDP++ visits, 9 Jul 2024 – 7 Sep 2026); Google Search Console, US web, walmart.com domain property via the Botify platform (15 Oct 2024 – 6 Sep 2026); Bing Webmaster Tools property totals (13 Mar 2025 – 8 Aug 2026); Walmart draft baseline clause received 9 Sep 2026. Year-over-year uses 364-day alignment throughout. SpeedWorkers lift uses the tiers in Frank’s 13 Aug model, expressed as a share of the traffic base and ramped over three tranches. Full interactive model: Walmart Pilot Rebase artifact.</footer>`;
+document.getElementById('sheet').innerHTML = sheet;
+wire(document.getElementById('sheet'));
+</script>
