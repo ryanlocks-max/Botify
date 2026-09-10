@@ -1,0 +1,276 @@
+<title>What Walmart Is Asking For</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..800&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --page:#F4F6F9; --surface:#FFFFFF; --sunk:#EEF2F7;
+  --ink:#14213A; --ink-2:#46536B; --muted:#7C879B; --rule:#DDE3EB; --rule-soft:#EAEEF3;
+  --wm:#1A6FD1; --wm-lo:#5FA3E8; --wm-soft:rgba(26,111,209,.12);
+  --bt:#B85C1A; --bt-lo:#E0954F; --third:#5F3DC4;
+  --ly:#98A4B8; --good:#0B7A3B; --bad:#B42318; --spark:#FFC220;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
+  --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --third:#8F7FE6; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; } }
+:root[data-theme="dark"] {
+  color-scheme: dark; --page:#0E131C; --surface:#151C28; --sunk:#1B2433;
+  --ink:#EDF1F7; --ink-2:#B7C1D1; --muted:#8593A8; --rule:#283344; --rule-soft:#212B3A;
+  --wm:#3D8FE0; --wm-lo:#2C6FB3; --wm-soft:rgba(61,143,224,.18); --bt:#C9782E; --bt-lo:#8A4512; --third:#8F7FE6; --ly:#6B778C; --good:#4CC377; --bad:#F0736A; }
+
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font:16px/1.5 "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased; }
+h1,h2,h3 { margin:0; letter-spacing:-.02em; text-wrap:balance; }
+p { margin:0; }
+.num { font-variant-numeric:tabular-nums; }
+.wrap { max-width:1000px; margin:0 auto; padding:40px 32px 70px; }
+@media (max-width:700px){ .wrap { padding:24px 16px 50px; } }
+.kicker { font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+h1 { font-size:clamp(28px,4vw,40px); line-height:1.08; font-weight:700; max-width:22ch; }
+.lede { margin-top:16px; font-size:18px; color:var(--ink-2); max-width:62ch; line-height:1.5; }
+.lede b { color:var(--ink); }
+.panel { margin-top:44px; padding-top:34px; border-top:1px solid var(--rule); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.25fr); gap:28px 48px; align-items:start; }
+@media (max-width:820px){ .panel { grid-template-columns:1fr; } }
+.panel .pn { font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--wm); margin-bottom:10px; }
+.panel h2 { font-size:clamp(22px,2.6vw,28px); line-height:1.15; }
+.panel .say { margin-top:14px; color:var(--ink-2); font-size:16px; line-height:1.55; display:grid; gap:10px; }
+.panel .say b { color:var(--ink); }
+.big { display:flex; gap:10px 28px; flex-wrap:wrap; margin-top:18px; }
+.big div { display:grid; gap:2px; }
+.big .v { font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1.05; }
+.big .k { font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.viz { background:var(--surface); border:1px solid var(--rule); border-radius:12px; padding:18px 20px 16px; }
+.viz h3 { font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+.viz svg { display:block; width:100%; height:auto; overflow:visible; }
+.viz text { font-family:inherit; fill:var(--ink-2); font-size:12.5px; }
+.viz text.lab { fill:var(--ink); font-weight:600; font-size:13px; }
+.viz text.val { fill:var(--ink); font-weight:700; font-size:13px; }
+.viz text.mut { fill:var(--muted); font-size:11.5px; }
+.viz text.ref { fill:var(--bt); font-weight:700; font-size:12px; }
+.viz .grid line { stroke:var(--rule-soft); }
+.viz .refline { stroke:var(--bt); stroke-width:1.5; stroke-dasharray:5 4; }
+.viz .capline { fill:var(--muted); font-size:12px; }
+.viz path.line { fill:none; stroke-width:2.5; stroke-linejoin:round; stroke-linecap:round; }
+.viz path.area { opacity:.12; }
+.viz .marker { stroke:var(--surface); stroke-width:2; }
+.viz .cap { font-size:12.5px; color:var(--muted); margin-top:10px; line-height:1.45; }
+.ladder { display:grid; gap:8px; margin-top:4px; }
+.qbox { margin-top:18px; border-left:3px solid var(--spark); background:var(--sunk); padding:12px 16px; border-radius:0 8px 8px 0; font-size:15px; color:var(--ink-2); }
+.qbox b { color:var(--ink); }
+.qs { margin-top:44px; padding-top:34px; border-top:1px solid var(--rule); }
+.qs h2 { font-size:clamp(22px,2.6vw,28px); }
+.qs .sub { color:var(--ink-2); margin-top:8px; max-width:70ch; }
+.qlist { display:grid; gap:10px; margin-top:20px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+.q { background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:14px 16px; font-size:15px; }
+.q b { display:block; margin-bottom:4px; }
+.q span { color:var(--ink-2); font-size:14px; }
+footer { margin-top:44px; padding-top:16px; border-top:1px solid var(--rule); font-size:12.5px; color:var(--muted); line-height:1.55; max-width:90ch; }
+@media print { body { background:#fff; } .panel, .qs { break-inside:avoid; } }
+</style>
+
+<div class="wrap" id="root"></div>
+
+<script>
+const D = /*__DATA__*/null;
+const M = n => (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + 'M';
+const M0 = n => Math.round(n / 1e6) + 'M';
+const spct = x => (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(x * 100).toFixed(1) + '%';
+const usd = n => '$' + Math.round(n / 1e6) + 'M';
+const CV = c => c.startsWith('--') ? `var(${c})` : c;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// Horizontal bars with a label column, value at the tip, optional dashed reference.
+function hbars(rows, opts) {
+  const W = 560, rowH = opts.rowH || 34, labW = opts.labW || 190, pad = 14, top = 6;
+  const H = top + rows.length * rowH + (opts.axis ? 22 : 8);
+  const max = opts.max || Math.max(...rows.map(r => r.value), opts.ref || 0) * 1.08;
+  const X = v => labW + (v / max) * (W - labW - pad - 56);
+  let g = '';
+  rows.forEach((r, i) => {
+    const y = top + i * rowH, h = Math.min(20, rowH - 12), x1 = X(r.value);
+    g += `<text class="lab" x="0" y="${y + h / 2 + 5}">${esc(r.label)}</text>`;
+    if (r.sub) g += `<text class="mut" x="0" y="${y + h / 2 + 18}">${esc(r.sub)}</text>`;
+    const rr = Math.min(4, h / 2);
+    g += `<path fill="${CV(r.color)}" opacity="${r.faint ? .45 : 1}" d="M${labW} ${y}H${x1 - rr}Q${x1} ${y} ${x1} ${y + rr}V${y + h - rr}Q${x1} ${y + h} ${x1 - rr} ${y + h}H${labW}Z"/>`;
+    g += `<text class="val" x="${x1 + 7}" y="${y + h / 2 + 5}">${esc(r.text || M(r.value))}</text>`;
+  });
+  if (opts.ref) { const x = X(opts.ref); g += `<line class="refline" x1="${x}" x2="${x}" y1="0" y2="${H - (opts.axis ? 18 : 4)}"/><text class="ref" x="${x}" y="${H - 2}" text-anchor="middle">${esc(opts.refLabel || '')}</text>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.aria || '')}">${g}</svg>`;
+}
+// One stacked horizontal bar: segments [{label, value, color}] with a total label.
+function stackBar(segs, total, note) {
+  const W = 560, H = 92, bw = W - 130, y = 8, h = 26; const max = total;
+  let g = '', x = 0;
+  segs.forEach((s, i) => { const w = s.value / max * bw; g += `<rect x="${x}" y="${y}" width="${Math.max(0, w - 2)}" height="${h}" fill="${CV(s.color)}" rx="3"/>`; x += w; });
+  g += `<text class="val" x="${bw + 8}" y="${y + h / 2 + 5}">${esc(note)}</text>`;
+  let lx = 0; segs.forEach(s => { const t = `${s.label} ${s.text || M0(s.value)}`; g += `<rect x="${lx}" y="${y + h + 22}" width="11" height="11" rx="2" fill="${CV(s.color)}"/><text class="mut" x="${lx + 16}" y="${y + h + 32}">${esc(t)}</text>`; lx += t.length * 6.6 + 34; });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Stacked bar">${g}</svg>`;
+}
+// Small column strip for monthly YoY.
+function yoyStrip(rows) {
+  const W = 560, H = 150, pad = {l: 44, r: 8, t: 14, b: 26}, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+  const vals = rows.map(r => r.v), lo = Math.min(0, ...vals), hi = Math.max(0, ...vals), Y = v => pad.t + (1 - (v - lo) / (hi - lo)) * ih, slot = iw / rows.length, bw = Math.min(24, slot * .62);
+  let g = `<line x1="${pad.l}" x2="${W - pad.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--rule)"/>`;
+  [hi, 0, lo].forEach(t => g += `<text class="mut" x="${pad.l - 6}" y="${Y(t) + 4}" text-anchor="end">${spct(t)}</text>`);
+  rows.forEach((r, i) => { const x = pad.l + slot * (i + .5) - bw / 2, y0 = Y(0), y1 = Y(r.v); g += `<rect x="${x}" y="${Math.min(y0, y1)}" width="${bw}" height="${Math.abs(y0 - y1)}" fill="${r.v < 0 ? 'var(--bad)' : 'var(--wm)'}" rx="3"/>`;
+    g += `<text class="mut" x="${pad.l + slot * (i + .5)}" y="${H - 8}" text-anchor="middle">${esc(r.l)}</text>`; });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Walmart SEO visits, year over year by month">${g}</svg>`;
+}
+// Weekly area chart.
+function areaChart(pts, opts) {
+  const W = 560, H = 200, pad = {l: 46, r: 12, t: 14, b: 26}, iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+  const hi = Math.max(...pts.map(p => p.v)) * 1.1, X = i => pad.l + i / (pts.length - 1) * iw, Y = v => pad.t + (1 - v / hi) * ih;
+  const ticks = [0, hi / 2, hi]; let g = '<g class="grid">' + ticks.map(t => `<line x1="${pad.l}" x2="${W - pad.r}" y1="${Y(t)}" y2="${Y(t)}"/>`).join('') + '</g>';
+  ticks.forEach(t => g += `<text class="mut" x="${pad.l - 6}" y="${Y(t) + 4}" text-anchor="end">${M(t)}</text>`);
+  let d = ''; pts.forEach((p, i) => d += (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(p.v).toFixed(1));
+  g += `<path class="area" fill="var(--wm)" d="${d}L${X(pts.length - 1)} ${Y(0)}L${X(0)} ${Y(0)}Z"/><path class="line" stroke="var(--wm)" d="${d}"/>`;
+  pts.forEach((p, i) => { if (i % 4 === 0 && i <= pts.length - 3 || i === pts.length - 1) g += `<text class="mut" x="${X(i)}" y="${H - 8}" text-anchor="middle">${esc(p.l)}</text>`; });
+  const last = pts[pts.length - 1]; g += `<circle class="marker" cx="${X(pts.length - 1)}" cy="${Y(last.v)}" r="4.5" fill="var(--wm)"/><text class="val" x="${X(pts.length - 1) - 8}" y="${Y(last.v) - 10}" text-anchor="end">${M(last.v)} / week</text>`;
+  if (opts.mark) { const i = pts.findIndex(p => p.end >= opts.mark); if (i >= 0) g += `<line x1="${X(i)}" x2="${X(i)}" y1="${pad.t}" y2="${pad.t + ih}" stroke="var(--muted)" stroke-dasharray="3 3"/><text class="mut" x="${X(i) + 5}" y="${pad.t + 12}">${esc(opts.markLabel)}</text>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.aria || '')}">${g}</svg>`;
+}
+
+// ── numbers ──────────────────────────────────────────────────────────────────
+const PJ = D.proj, T = PJ.totals, WN = D.windows, G = D.goal, A = D.aeo, C = D.contract, R = D.rpv;
+const LY = T.ly, WB = T.wb, ours = T.wm_central, floor = T.wm_low, fall = T.wm_alt;
+const need = {theirs: G.total, flat: WB + G.total - LY, ours: WB + G.total - ours, floor: WB + G.total - floor};
+const withGoal = WB + G.total;
+const vpc = 2.45;
+const yoyRows = D.monthly.map(r => ({l: MON[+r.ym.slice(5, 7) - 1].slice(0, 3) + (r.ym.endsWith('-01') ? ' ' + r.ym.slice(2, 4) : ''), v: r.wm}));
+const wk = A.weekly.map(w => ({l: MON[+w.end.slice(5, 7) - 1] + ' ' + w.end.slice(8), v: w.v, end: w.end}));
+const dollars = [['Last year’s GMV per visit', R.ly], ['Last 13 weeks’ GMV per visit', R.w13], ['Projected Sep–Dec GMV per visit', R.proj]].map(([l, r]) => ({l, r, seo: G.seo * r, aeo: G.aeo * A.rpv, total: G.seo * r + G.aeo * A.rpv}));
+
+document.getElementById('root').innerHTML = `
+<p class="kicker">Botify · Walmart SpeedWorkers pilot · internal · 10 September 2026</p>
+<h1>What Walmart is asking us to commit to</h1>
+<p class="lede">Walmart wants the pilot judged on <b>SEO visits above a fixed baseline</b> for September to December. The baseline is <b>${M0(WB)} visits</b>. The goal is <b>${M0(G.total)} incremental visits</b>, of which at least <b>${M(G.aeo)} must come from its AI channel</b>. Walmart calls this a 4.5% uplift. Five things about that ask are worth understanding.</p>
+
+<section class="panel">
+  <div>
+    <p class="pn">One · The baseline</p>
+    <h2>Their baseline assumes their best recent month repeats for four months.</h2>
+    <div class="say">
+      <p>Walmart built the baseline by taking last year’s September to December and growing it <b>${spct(WB / LY - 1)}</b>. That is August’s year-over-year figure, the strongest month since spring.</p>
+      <p>Walmart’s own data tells a different story. On 1 May it redefined its SEO channel, carving AI traffic out into a separate “AEO” channel. Since that day SEO visits are running <b>${spct(WN.sinceMay.visits)}</b> year over year, and were negative in three of the four months.</p>
+      <p><b>Every 10M of baseline is 10M of incremental we do not have to produce.</b> We would open at the lowest defensible figure, Walmart’s own fiscal Q2, and expect to land at the trend since 1 May. The 13-week read is the fallback if Walmart insists August must count.</p>
+    </div>
+  </div>
+  <div class="viz">
+    <h3>September to December visits · five baselines</h3>
+    ${hbars([
+      {label: 'Walmart’s proposal', sub: 'last year ' + spct(WB / LY - 1) + ' · August’s rate', value: WB, color: '--wm'},
+      {label: 'Last year, as it happened', sub: 'Sep–Dec 2025, same weekdays', value: LY, color: '--ly'},
+      {label: 'Fallback · last 13 weeks', sub: spct(WN.w13.visits) + ' year over year', value: fall, color: '--wm-lo', faint: true},
+      {label: 'Where we aim to land · since 1 May', sub: spct(WN.sinceMay.visits) + ' · their data since SEO was redefined', value: ours, color: '--wm-lo'},
+      {label: 'Opening position · Walmart fiscal Q2', sub: spct(WN.fyq2.visits) + ' · their last completed quarter', value: floor, color: '--wm-lo', faint: true},
+    ], {rowH: 46, labW: 235, max: WB * 1.12, aria: 'Five baselines compared'})}
+    <h3 style="margin-top:14px">Walmart SEO visits, year over year, by month</h3>
+    ${yoyStrip(yoyRows)}
+    <p class="cap">Green-to-red is the channel’s own trajectory. The baseline extends August; the four months since 1 May average ${spct(WN.sinceMay.visits)}.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div>
+    <p class="pn">Two · The goal</p>
+    <h2>The goal is stacked on top of the baseline, so the two compound.</h2>
+    <div class="say">
+      <p>To book ${M0(G.total)} incremental visits against a ${M0(WB)} baseline, Walmart’s SEO channel must actually deliver <b>${M0(withGoal)} visits</b>. That is <b>${spct(withGoal / LY - 1)} year over year</b> on a channel running ${spct(WN.sinceMay.visits)}.</p>
+      <p>The ${M0(G.total)} only measures our contribution if Walmart’s assumed growth also happens. If the channel does what it has done since May, reaching ${M0(withGoal)} needs <b>${M0(need.ours)}</b> of lift, three times our most optimistic case.</p>
+    </div>
+    <div class="big"><div><span class="v num">${spct(withGoal / LY - 1)}</span><span class="k">growth the goal requires</span></div><div><span class="v num">${spct(WN.sinceMay.visits)}</span><span class="k">growth the channel is delivering</span></div></div>
+  </div>
+  <div class="viz">
+    <h3>What the goal implies for total visits</h3>
+    ${stackBar([{label: 'Last year', value: LY, color: '--ly'}, {label: 'Their assumed growth', value: WB - LY, color: '--wm', text: '+' + M0(WB - LY)}, {label: 'Our goal', value: G.total, color: '--bt', text: '+' + M0(G.total)}], withGoal, M0(withGoal) + ' · ' + spct(withGoal / LY - 1) + ' YoY')}
+    <h3 style="margin-top:14px">Lift needed to reach ${M0(withGoal)}, depending on what the channel does on its own</h3>
+    ${hbars([
+      {label: 'Their growth assumption holds', sub: 'channel grows ' + spct(WB / LY - 1) + ' on its own', value: need.theirs, color: '--bt'},
+      {label: 'Channel flat on last year', value: need.flat, color: '--bt', faint: true},
+      {label: 'Channel keeps its since-May trend', sub: spct(WN.sinceMay.visits), value: need.ours, color: '--bt', faint: true},
+      {label: 'Channel at fiscal Q2’s rate', sub: spct(WN.fyq2.visits), value: need.floor, color: '--bt', faint: true},
+      {label: 'Our most optimistic case', sub: 'high tier, fair baseline', value: T.inc_high, color: '--third'},
+    ], {rowH: 44, labW: 250, aria: 'Lift needed under different trends'})}
+  </div>
+</section>
+
+<section class="panel">
+  <div>
+    <p class="pn">Three · Our own forecast</p>
+    <h2>33M is the top of our range, not the middle of it.</h2>
+    <div class="say">
+      <p><b>How our forecast works.</b> Frank’s August model estimates the extra Google and Bing clicks SpeedWorkers can add through three levers (more of Walmart’s pages indexed, better performance on pages already ranking, and Bing), under low, mid and high assumptions, ramping in over the four months as pages go live. The contract’s three levels came from it: a threshold of 1.4M clicks, a target of 5.98M and a stretch of 13.65M. Walmart counts about ${vpc} visits for every click we see, so those convert to roughly ${M(C.threshold * vpc)}, ${M(C.target * vpc)} and ${M(C.stretch * vpc)} visits.</p>
+      <p>Run directly on Walmart’s visit data with a fair baseline, the same three cases give <b>${M(T.inc_low)}, ${M(T.inc_mid)} and ${M(T.inc_high)}</b> incremental visits. Walmart’s ${M0(G.total)} sits at ${Math.round(G.total / T.inc_high * 100)}% of our high case and ${(G.total / T.inc_mid).toFixed(1)} times our mid case. It is our stretch, restated as the goal.</p>
+    </div>
+  </div>
+  <div class="viz">
+    <h3>Incremental visits, September to December</h3>
+    ${hbars([
+      {label: 'Contract threshold', sub: '1.4M clicks → visits', value: C.threshold * vpc, color: '--ly'},
+      {label: 'Contract target', sub: '5.98M clicks → visits', value: C.target * vpc, color: '--ly'},
+      {label: 'Contract stretch', sub: '13.65M clicks → visits', value: C.stretch * vpc, color: '--ly'},
+      {label: 'Our low case', sub: spct(T.inc_low / ours) + ' of a fair baseline', value: T.inc_low, color: '--third', faint: true},
+      {label: 'Our mid case', sub: spct(T.inc_mid / ours), value: T.inc_mid, color: '--third'},
+      {label: 'Our high case', sub: spct(T.inc_high / ours), value: T.inc_high, color: '--third'},
+    ], {rowH: 44, labW: 190, ref: G.total, refLabel: 'Walmart’s goal · ' + M0(G.total), axis: true, aria: 'Contract levels and our tiers against the goal'})}
+    <p class="cap">Our cases ramp in as pages go live: more than half of any tier’s visits arrive in November and December. A goal spread evenly across the four months expects ${M(G.total / 4)} in September; our high case delivers ${M(PJ.months[0].inc_high)}.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div>
+    <p class="pn">Four · The AI channel</p>
+    <h2>The AI channel has four months of history and no prior year.</h2>
+    <div class="say">
+      <p>Walmart began reporting an “AEO” marketing vehicle on 1 May 2026. The export it shared runs from that day; every prior-year column in it is zero. <b>A year-over-year baseline for AEO cannot be built</b>, and Walmart has not said how the ${M(G.aeo)} would be measured.</p>
+      <p>The channel is growing fast: ${M(A.baseWeekly)} visits a week in August, roughly double June. If every AEO visit counts, ${M(G.aeo)} is about ${Math.round(G.aeo / A.chanFlat * 100)}% of what the channel will do on its own. If it is measured as lift against the current run-rate, our model gives ${M(A.inc.low)} to ${M(A.inc.high)} across the tiers, ${M(A.incGrow.low)} to ${M(A.incGrow.high)} if the channel keeps growing.</p>
+    </div>
+    <div class="qbox"><b>Open question for Walmart.</b> What is the AEO baseline, and what counts as an incremental AEO visit? Without a prior year, the answer decides whether ${M(G.aeo)} is trivial or above anything we have modelled.</div>
+  </div>
+  <div class="viz">
+    <h3>Walmart AEO visits per week since the channel began</h3>
+    ${areaChart(wk, {mark: '2026-08-31', markLabel: 'Pilot launch', aria: 'AEO weekly visits'})}
+    <h3 style="margin-top:14px">The ${M(G.aeo)} AEO ask against the channel</h3>
+    ${hbars([
+      {label: 'AEO volume, Sep–Dec, if flat', sub: 'at August’s run-rate', value: A.chanFlat, color: '--wm-lo', faint: true},
+      {label: 'Walmart’s AEO ask', value: G.aeo, color: '--bt'},
+      {label: 'Our AEO high case', sub: 'lift on the run-rate, base held flat', value: A.inc.high, color: '--third'},
+      {label: 'Our AEO mid case', value: A.inc.mid, color: '--third', faint: true},
+    ], {rowH: 40, labW: 215, aria: 'AEO ask against channel volume'})}
+  </div>
+</section>
+
+<section class="panel">
+  <div>
+    <p class="pn">Five · In dollars</p>
+    <h2>What ${M0(G.total)} visits means in revenue.</h2>
+    <div class="say">
+      <p>This is the top line Walmart’s goal implies the pilot must generate: ${M(G.seo)} SEO visits at Walmart’s own GMV per SEO visit, plus ${M(G.aeo)} AEO visits at ${'$' + A.rpv.toFixed(2)}, the channel’s GMV per visit since June.</p>
+      <p>The SEO figure depends on which GMV per visit you use. Walmart’s has risen ${spct(WN.sinceMay.rpv)} year over year since May, so last year’s rate understates it and the contract’s frozen $3.19 sits at the bottom of the range.</p>
+      <p>Whether this is break-even for Walmart depends on what it is paying for the pilot, which this page does not know.</p>
+    </div>
+  </div>
+  <div class="viz">
+    <h3>Net GMV the goal converts to</h3>
+    ${hbars(dollars.map(d => ({label: d.l, sub: '$' + d.r.toFixed(2) + ' per SEO visit', value: d.total, color: '--third', text: usd(d.total)})), {rowH: 48, labW: 250, max: dollars[2].total * 1.15, aria: 'Dollar conversion of the goal'})}
+    <p class="cap">SEO visits are ${Math.round(G.seo / G.total * 100)}% of the goal but ${Math.round(dollars[2].seo / dollars[2].total * 100)}% of the dollars; an AEO visit is worth about ${(A.rpv / R.proj).toFixed(1)}× an SEO visit. At the contract’s frozen $3.19 per visit the SEO portion is ${usd(G.seo * R.frozen)}.</p>
+  </div>
+</section>
+
+<section class="qs">
+  <h2>Questions Walmart needs to answer before any of this is measurable</h2>
+  <p class="sub">None of these has an answer in the documents Walmart has shared.</p>
+  <div class="qlist">
+    <div class="q"><b>How will AEO incremental be measured?</b><span>No prior year exists for the channel. Against a run-rate, a growth curve, or does every AEO visit count?</span></div>
+    <div class="q"><b>Where does 4.5% come from?</b><span>${M0(G.total)} is ${spct(G.total / WB)} of the baseline they sent and ${spct(G.total / withGoal)} of baseline plus goal. If they are working from a different baseline, we should see it.</span></div>
+    <div class="q"><b>Full months, or the 20 December close?</b><span>The baseline is monthly through December; the contract stops counting on the 20th. The eleven days are peak season at peak adoption.</span></div>
+    <div class="q"><b>Is ${M0(G.total)} the pass mark or the stretch?</b><span>The contract had three levels. A single number changes what “the pilot worked” means.</span></div>
+    <div class="q"><b>What is an SEO visit?</b><span>Walmart counts 2.4 to 3.3 visits for every click Google reports to us, and the ratio is rising. We need the channel definition in writing before it becomes the source of record.</span></div>
+    <div class="q"><b>Is any of this ramp-aware?</b><span>Pages go live in tranches and adoption builds over weeks. A goal spread evenly across four months is not the same goal as one that expects most of it in November and December.</span></div>
+  </div>
+</section>
+
+<footer>Sources: Walmart DMP exports (SEO marketing vehicle, daily 9 Jul 2024 – 7 Sep 2026; AEO marketing vehicle, daily 1 May – 7 Sep 2026, prior-year columns empty); Walmart draft baseline clause and revised goal, September 2026; Frank’s SpeedWorkers pilot forecast, 13 Aug 2026; Google Search Console and Bing Webmaster Tools via the Botify platform for the visits-per-click ratio. Year-over-year uses Walmart’s 364-day alignment. Our low, mid and high cases apply Frank’s lift assumptions to Walmart’s visit base on the since-1-May baseline and ramp them over three tranches from 1 September. Supporting detail: the Walmart Baseline Brief and the Walmart Pilot Rebase model.</footer>`;
+</script>
